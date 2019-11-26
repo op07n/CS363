@@ -23,6 +23,7 @@ namespace CS363_TeamP
         public int expectedSpeed;
         public int expectedAltitude;
         public int expectedHeading;
+        public bool landing = false;
         PictureBox Airplane = new PictureBox();
         TableLayoutPanel tblPlaneInfo;
         Label planeinfo = new Label();
@@ -46,8 +47,8 @@ namespace CS363_TeamP
             }
             else if (startLoc == 2)
             {
-                Airplane.Location = new Point(f.ClientSize.Width, -5); //startLoc 2
-                planeinfo.Location = new Point(f.ClientSize.Width+25, -5);
+                Airplane.Location = new Point(f.ClientSize.Width-15, -5); //startLoc 2
+                planeinfo.Location = new Point(f.ClientSize.Width+10, -5);
                 heading = 254;
             }
             else if (startLoc == 3)
@@ -56,7 +57,7 @@ namespace CS363_TeamP
                 planeinfo.Location = new Point(f.ClientSize.Width - 285, f.ClientSize.Height);
                 heading = 5;
             }
-            else
+            else  //Plane is departing
             {
                 Airplane.Location = new Point(402, 277); //startLoc 4
                 planeinfo.Location = new Point(427, 277);
@@ -97,7 +98,7 @@ namespace CS363_TeamP
             tm.Start();
         }
 
-        private void infoGenerator() //FIXME: should take in inbound/outbound to adjust values generated
+        private void infoGenerator() 
         {
             //Variables needed for generating random info
             var random = new Random();
@@ -110,7 +111,7 @@ namespace CS363_TeamP
             {
                 ID += random.Next(9);
             }
-            //Generate random destination Airport       //FIXME: Need logic to assign all inbound to "ABC" and outbound get random value
+            //Generate random destination Airport 
             if (control == 'D')
             {
                 index = random.Next(APlist.Count);
@@ -169,10 +170,13 @@ namespace CS363_TeamP
 
         }
 
-
+        //Changes blank control indicators to A (only incomming aircraft have blank control indicators), shows border on selected aircraft, and displays directive input table
         public void Airplane_Click(object sender, EventArgs e)  
         {
-            control = 'A';
+            if (control == ' ')
+            {
+                control = 'A';
+            }
             PictureBox pic = sender as PictureBox;
             foreach (Control item in f.Controls.OfType<TableLayoutPanel>())
             {
@@ -183,19 +187,16 @@ namespace CS363_TeamP
                 }
                 
             }
-            
             foreach (PictureBox item in f.Controls.OfType <PictureBox>())
             {
                 item.BorderStyle = BorderStyle.None;
-                
             }
             Airplane.BorderStyle = BorderStyle.Fixed3D;
             tableMaker();
         }
-
+        //Commits directives to expected heading, speed and altitude.  Also, closes input table and removes icon border.
         public void btnSendCmd_Click(object sender, EventArgs e, string newHeading, string newSpeed, string newAltitude)
         {
-            //FIXME: add functionality to update aircraft parameters based on info entered to tblPlaneInfo
             foreach (Control item in f.Controls.OfType<TableLayoutPanel>())
             {
                 if (item.Name == "tblPlaneInfo")
@@ -210,7 +211,7 @@ namespace CS363_TeamP
             expectedSpeed = Int32.Parse(newSpeed);
             expectedAltitude = Int32.Parse(newAltitude);
         }
-
+        //Performs rotation of airplane icon based on current heading angle
         private Bitmap rotateImage(Bitmap b, int angle)
         {
             int maxside = (int)(Math.Sqrt(b.Width * b.Width + b.Height * b.Height));
@@ -225,7 +226,7 @@ namespace CS363_TeamP
             return returnBitmap;
 
         }
-
+        //Scale movement in X and Y coordinates depending on heading angle
         private (double scaleX, double scaleY) vectorScale(int heading)
         {
             double scaleY = Math.Sin(heading * (Math.PI / 180));
@@ -249,7 +250,7 @@ namespace CS363_TeamP
             {
                 speed = speed + Math.Min(expectedSpeed - speed, 20);
             }
-            //Curtail altitude changes to 2000ft (20) per update        FIXME: finish this
+            //Curtail altitude changes to 2000ft (20) per update
             if (expectedAltitude == altitude || Math.Abs(expectedAltitude - altitude) < 20)
             {
                 altitude = expectedAltitude;
@@ -263,7 +264,17 @@ namespace CS363_TeamP
                 altitude = altitude + Math.Min(expectedAltitude - altitude, 20);
             }
             //Curtail heading changes to 20 deg per update              FIXME: Need to account for turning right and left!  Maybe add a R or L radio button?
-            if (expectedHeading == heading || Math.Abs(expectedHeading - heading) < 20)
+            double landingAngle = (Math.Atan2(Airplane.Location.Y - 285 + 10, Airplane.Location.X - 410 + 10) * (180 / Math.PI));
+            if (heading == 220 && landingAngle > -58 && landingAngle < -50 && altitude <= 50 && (altitude >= 10 || landing == true))
+            {
+                double tx = 410 - Airplane.Location.X + 12;
+                double ty = 285 - Airplane.Location.Y + 12;
+                double l = Math.Sqrt(tx * tx + ty * ty);
+                Airplane.Location = new Point(Airplane.Location.X + (int)(speed / 50 * (tx/l)), Airplane.Location.Y + (int)(speed / 50 * (ty/l)));  
+                planeinfo.Location = new Point(planeinfo.Location.X + (int)(speed / 50 * (tx / l)), planeinfo.Location.Y + (int)(speed / 50 * (ty / l)));  //Use this to gauge speed difference - Uncomment when ready fro use
+                landing = true;
+            }
+            else if (expectedHeading == heading || Math.Abs(expectedHeading - heading) < 20)
             {
                 heading = expectedHeading;
             }
@@ -283,9 +294,58 @@ namespace CS363_TeamP
             planeinfo.Location = new Point(planeinfo.Location.X + (int)(speed/10 * scaleY), planeinfo.Location.Y - (int)(speed/10 * scaleX));
             //Update plane info display with new info
             planeinfo.Text = String.Format("{0} {1} {2}\r\n{3} {4} {5}", Airplane.Tag, destAP, control, altitude, speed, heading);
-
-            //var rand = new Random();
-            //heading += rand.Next(-20,20);
+            //When on approach incrementally decrease altitude and speed
+            if (landing == true)
+            {
+                double distToRunway = (Math.Sqrt(Math.Pow(Airplane.Location.X - 410 + 10, 2) + Math.Pow(Airplane.Location.Y - 285 + 10, 2)));
+                if (distToRunway < 15)
+                {
+                    f.Controls.Remove(Airplane);
+                    f.Controls.Remove(planeinfo);
+                    f.Controls.Remove(tblPlaneInfo);
+                    
+                }
+                else if (distToRunway < 55)
+                {
+                    expectedAltitude = 5;
+                    if (expectedSpeed > 125)
+                    {
+                        expectedSpeed = 125;
+                    }
+                    
+                }
+                else if (distToRunway < 100)
+                {
+                    expectedAltitude = 10;
+                    if (expectedSpeed > 150)
+                    {
+                        expectedSpeed = 150;
+                    }
+                }
+                else if (distToRunway < 150)
+                {
+                    if (expectedAltitude > 30)
+                    {
+                        expectedAltitude = 30;
+                    }
+                    if (expectedSpeed > 170)
+                    {
+                        expectedSpeed = 170;
+                    }
+                }
+                else if (distToRunway < 200)
+                {
+                    if (expectedAltitude > 40)
+                    {
+                        expectedAltitude = 40;
+                    }
+                    if (expectedSpeed > 200)
+                    {
+                        expectedSpeed = 200;
+                    }
+                   
+                }
+            }  
 
         }
 
@@ -297,7 +357,8 @@ namespace CS363_TeamP
             TextBox txtID = new System.Windows.Forms.TextBox();
             TextBox txtSpdTitle = new System.Windows.Forms.TextBox();
             TextBox txtSpd = new System.Windows.Forms.TextBox();
-            tblPlaneInfo = new System.Windows.Forms.TableLayoutPanel();    
+            tblPlaneInfo = new System.Windows.Forms.TableLayoutPanel();
+            TableLayoutPanel tblTurnDirection = new System.Windows.Forms.TableLayoutPanel();
             TextBox txtAlt = new System.Windows.Forms.TextBox();
             TextBox txtAltTitle = new System.Windows.Forms.TextBox();
             TextBox txtHead = new System.Windows.Forms.TextBox();
@@ -346,7 +407,8 @@ namespace CS363_TeamP
             tblPlaneInfo.ColumnCount = 2;
             tblPlaneInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             tblPlaneInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tblPlaneInfo.Controls.Add(btnSendCmd, 1, 4);
+            tblPlaneInfo.Controls.Add(btnSendCmd, 1, 5);
+            tblPlaneInfo.Controls.Add(tblTurnDirection, 1, 4); //FIXME: Add layoutTable with two radio buttons for CW and CCW turns.  Also, add "Turn Direction" title to first column!
             tblPlaneInfo.Controls.Add(txtHead, 1, 3);
             tblPlaneInfo.Controls.Add(txtAltTitle, 0, 2);
             tblPlaneInfo.Controls.Add(txtAlt, 1, 2);
@@ -356,7 +418,8 @@ namespace CS363_TeamP
             tblPlaneInfo.Controls.Add(txtIDTitle, 0, 0);
             tblPlaneInfo.Controls.Add(txtHeadTitle, 0, 3);
             tblPlaneInfo.Name = "tblPlaneInfo";
-            tblPlaneInfo.RowCount = 5;
+            tblPlaneInfo.RowCount = 6;
+            tblPlaneInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tblPlaneInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tblPlaneInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tblPlaneInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -365,6 +428,13 @@ namespace CS363_TeamP
             tblPlaneInfo.Size = new System.Drawing.Size(217, 141);
             tblPlaneInfo.Location = new System.Drawing.Point(0, f.ClientSize.Height - tblPlaneInfo.Bottom);
             tblPlaneInfo.TabIndex = 0;
+            //
+            //tblTurnDirection
+            //
+            /********FINISH THIS***********/
+            //FIXME: Add CW radio button
+            //FIXME: Add CCW radio button
+            //FIXME: Add Turn Direction title
             // 
             // txtAlt
             // 

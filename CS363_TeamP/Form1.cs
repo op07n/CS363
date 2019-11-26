@@ -34,7 +34,7 @@ namespace CS363_TeamP
             int Y = MousePosition.Y;
             ;
             //plane.heading = 121;
-            //MessageBox.Show(string.Format("X: {0}, Y: {1}, D: {2}", me.X, me.Y, Math.Sqrt(Math.Pow(me.X - 410, 2) + Math.Pow(me.Y - 285, 2))));
+            //MessageBox.Show(string.Format("X: {0}, Y: {1}, A: {2}", me.X, me.Y, (Math.Atan2(me.Y-285,me.X-410) * (180/Math.PI))));
             if (me.Button == MouseButtons.Right)
             {
                 //Outbound aircraft generation
@@ -68,16 +68,24 @@ namespace CS363_TeamP
             //pictureBox1.Location = new Point(pictureBox1.Location.X + 30, pictureBox1.Location.Y + 30);
 
         }
-
-        //Give us a rough idea of where the middle is.  We can use this for the math to determine if the mouse click is within or outside the airspace.
+        //***************************************************************************************************************
+        //These paint events are used for troubleshooting/dev purposes and need to be removed for the final product!!!!!
+        //***************************************************************************************************************
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             
             Graphics g = e.Graphics;
             Pen p = new Pen(Color.LawnGreen, 2);
+            //Give us a rough idea of where the middle is.  We can use this for the math to determine if the mouse click is within or outside the airspace.
+            g.DrawEllipse(p, 135, 10, 550, 550); 
+            //This graphic gives us an arc for the runway approach.
+            Point point1 = new Point(410, 285);
+            Point point2 = new Point(410 + (int)(Math.Cos(-51 * (Math.PI / 180)) * 400), 285 + (int)(Math.Sin(-51 * (Math.PI / 180)) * 400));
+            Point point3 = new Point(410 + (int)(Math.Cos(-57 * (Math.PI / 180)) * 400), 285 + (int)(Math.Sin(-57 * (Math.PI / 180)) * 400));
+            g.DrawLine(p, point1, point2);
+            g.DrawLine(p, point1, point3);
             
-            g.DrawEllipse(p, 135, 10, 550, 550);
-            
+
         }
     }
 }
