@@ -12,21 +12,35 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace CS363_TeamP
 {
-    class Plane
+    public class Plane
     {
-        public int speed;
+        private int speed;
         public string ID;
-        public char control = ' ';
+        private char control = ' ';
         public int altitude;
-        public int heading;
-        public string destAP;
-        public int expectedSpeed;
-        public int expectedAltitude;
-        public int expectedHeading;
-        public bool landing = false;
-        PictureBox Airplane = new PictureBox();
-        TableLayoutPanel tblPlaneInfo;
-        Label planeinfo = new Label();
+        private int heading;
+        private string destAP;
+        private int expectedSpeed;
+        private int expectedAltitude;
+        private int expectedHeading;
+        private bool turnCW;
+        private bool landing = false;
+        public PictureBox Airplane = new PictureBox();
+        TextBox txtIDTitle;
+        TextBox txtID;
+        TextBox txtSpdTitle;
+        TextBox txtSpd;
+        public TableLayoutPanel tblPlaneInfo;
+        TableLayoutPanel tblTurnDirection;
+        TextBox txtAlt;
+        TextBox txtAltTitle;
+        TextBox txtHead;
+        TextBox txtHeadTitle;
+        Button btnSendCmd;
+        RadioButton rbCW;
+        RadioButton rbCCW;
+        TextBox txtTurnTitle;
+        public Label planeinfo = new Label();
         Bitmap bmp;
         Timer tm = new Timer();
         int x = 100;
@@ -41,26 +55,26 @@ namespace CS363_TeamP
             //Assign starting location based on mouse click location
             if (startLoc == 1)
             {
-                Airplane.Location = new Point(0, 0); //startLoc 1
-                planeinfo.Location = new Point(25, 0);
+                Airplane.Location = new Point(334, 10); //startLoc 1
+                planeinfo.Location = new Point(359, 10);
                 heading = 121;
             }
             else if (startLoc == 2)
             {
-                Airplane.Location = new Point(f.ClientSize.Width-15, -5); //startLoc 2
-                planeinfo.Location = new Point(f.ClientSize.Width+10, -5);
-                heading = 254;
+                Airplane.Location = new Point(f.ClientSize.Width-15, 0); //startLoc 2
+                planeinfo.Location = new Point(f.ClientSize.Width+10, 0);
+                heading = 253;
             }
             else if (startLoc == 3)
             {
-                Airplane.Location = new Point(f.ClientSize.Width-310,f.ClientSize.Height); //startLoc 3
-                planeinfo.Location = new Point(f.ClientSize.Width - 285, f.ClientSize.Height);
-                heading = 5;
+                Airplane.Location = new Point(1040,f.ClientSize.Height); //startLoc 3
+                planeinfo.Location = new Point(1065, f.ClientSize.Height);
+                heading = 4;
             }
             else  //Plane is departing
             {
-                Airplane.Location = new Point(402, 277); //startLoc 4
-                planeinfo.Location = new Point(427, 277);
+                Airplane.Location = new Point(820, 375); //startLoc 4
+                planeinfo.Location = new Point(845, 375);
                 heading = 220;
                 control = 'D';
             }
@@ -76,8 +90,7 @@ namespace CS363_TeamP
             Airplane.ForeColor = Color.Red;
             Airplane.Tag = ID;
             Airplane.Image = rotateImage(bmp, heading);
-            Airplane.SizeMode = PictureBoxSizeMode.StretchImage;
-            
+            Airplane.SizeMode = PictureBoxSizeMode.Zoom;
             //Generate eventHandler for clicking on Airplane
             Airplane.Click += new EventHandler(this.Airplane_Click);
             //Add Airplane to form1
@@ -90,12 +103,16 @@ namespace CS363_TeamP
             planeinfo.BackColor = Color.Transparent;
             planeinfo.ForeColor = Color.White;
             planeinfo.BorderStyle = BorderStyle.None;
-            //Add lable to form1
             form.Controls.Add(planeinfo);
-            //Instantiate new timer for plane
-            tm.Interval = 1000;
-            tm.Tick += new EventHandler(tm_Tick);
-            tm.Start();
+            //
+            //Instantiate individual timers for each plane - Uncomment this section to restore individual timers
+            //tm.Interval = 1000;
+            //tm.Tick += new EventHandler(tm_Tick);
+            //tm.Start();
+            //
+            //Synronize all planes to the form1 timer - Comment this section out if switching to individual timers
+            form.timer1.Tick += new EventHandler(tm_Tick);
+            
         }
 
         private void infoGenerator() 
@@ -157,10 +174,12 @@ namespace CS363_TeamP
                 if (index < 5)
                 {
                     expectedHeading = 240;
+                    turnCW = true;
                 }
                 else
                 {
-                    expectedHeading = 98;
+                    expectedHeading = 94;
+                    turnCW = false;
                 }
             }
             else
@@ -169,49 +188,11 @@ namespace CS363_TeamP
             }
 
         }
-
-        //Changes blank control indicators to A (only incomming aircraft have blank control indicators), shows border on selected aircraft, and displays directive input table
-        public void Airplane_Click(object sender, EventArgs e)  
-        {
-            if (control == ' ')
-            {
-                control = 'A';
-            }
-            PictureBox pic = sender as PictureBox;
-            foreach (Control item in f.Controls.OfType<TableLayoutPanel>())
-            {
-                if (item.Name == "tblPlaneInfo")
-                {
-                    f.Controls.Remove(item);
-                    item.Dispose();
-                }
-                
-            }
-            foreach (PictureBox item in f.Controls.OfType <PictureBox>())
-            {
-                item.BorderStyle = BorderStyle.None;
-            }
-            Airplane.BorderStyle = BorderStyle.Fixed3D;
-            tableMaker();
-        }
-        //Commits directives to expected heading, speed and altitude.  Also, closes input table and removes icon border.
-        public void btnSendCmd_Click(object sender, EventArgs e, string newHeading, string newSpeed, string newAltitude)
-        {
-            foreach (Control item in f.Controls.OfType<TableLayoutPanel>())
-            {
-                if (item.Name == "tblPlaneInfo")
-                {
-                    f.Controls.Remove(item);
-                    item.Dispose();
-                }
-
-            }
-            Airplane.BorderStyle = BorderStyle.None;
-            expectedHeading = Int32.Parse(newHeading);
-            expectedSpeed = Int32.Parse(newSpeed);
-            expectedAltitude = Int32.Parse(newAltitude);
-        }
-        //Performs rotation of airplane icon based on current heading angle
+        
+        
+        //
+        //rotateImage - Performs rotation of airplane icon based on current heading angle
+        //
         private Bitmap rotateImage(Bitmap b, int angle)
         {
             int maxside = (int)(Math.Sqrt(b.Width * b.Width + b.Height * b.Height));
@@ -226,7 +207,10 @@ namespace CS363_TeamP
             return returnBitmap;
 
         }
+
+        //
         //Scale movement in X and Y coordinates depending on heading angle
+        //
         private (double scaleX, double scaleY) vectorScale(int heading)
         {
             double scaleY = Math.Sin(heading * (Math.PI / 180));
@@ -234,7 +218,7 @@ namespace CS363_TeamP
             return (scaleX,scaleY);
         }
 
-        public void tm_Tick(object sender, EventArgs e)
+        private void tm_Tick(object sender, EventArgs e)
         {
             
             //Curtail speed changes to 20kts per update
@@ -263,41 +247,61 @@ namespace CS363_TeamP
             {
                 altitude = altitude + Math.Min(expectedAltitude - altitude, 20);
             }
-            //Curtail heading changes to 20 deg per update              FIXME: Need to account for turning right and left!  Maybe add a R or L radio button?
-            double landingAngle = (Math.Atan2(Airplane.Location.Y - 285 + 10, Airplane.Location.X - 410 + 10) * (180 / Math.PI));
-            if (heading == 220 && landingAngle > -58 && landingAngle < -50 && altitude <= 50 && (altitude >= 10 || landing == true))
+            //Curtail heading changes to 20 deg per update   
+            double landingAngle = (Math.Atan2(Airplane.Location.Y - 360 + 12, Airplane.Location.X - 850 + 12) * (180 / Math.PI));
+            if (heading == 220 && ((landingAngle > -58 && landingAngle < -50 && altitude <= 50 && altitude >= 10) || landing == true))
             {
-                double tx = 410 - Airplane.Location.X + 12;
-                double ty = 285 - Airplane.Location.Y + 12;
+                double tx = 850 - Airplane.Location.X -12;
+                double ty = 360 - Airplane.Location.Y -12;
                 double l = Math.Sqrt(tx * tx + ty * ty);
-                Airplane.Location = new Point(Airplane.Location.X + (int)(speed / 50 * (tx/l)), Airplane.Location.Y + (int)(speed / 50 * (ty/l)));  
-                planeinfo.Location = new Point(planeinfo.Location.X + (int)(speed / 50 * (tx / l)), planeinfo.Location.Y + (int)(speed / 50 * (ty / l)));  //Use this to gauge speed difference - Uncomment when ready fro use
+                Airplane.Location = new Point(Airplane.Location.X + (int)(speed / 10 * (tx / l)), Airplane.Location.Y + (int)(speed / 10 * (ty / l)));  
+                planeinfo.Location = new Point(planeinfo.Location.X + (int)(speed / 10 * (tx / l)), planeinfo.Location.Y + (int)(speed / 10 * (ty / l)));  //Use this to gauge speed difference - Uncomment when ready fro use
                 landing = true;
             }
-            else if (expectedHeading == heading || Math.Abs(expectedHeading - heading) < 20)
+            else if (turnCW && heading != expectedHeading)
             {
-                heading = expectedHeading;
+                int tempHeading;
+                landing = false;
+                tempHeading = (heading + Math.Min((expectedHeading - heading+360)%360, 20)) % 360;
+                if (tempHeading < 0)
+                {
+                    heading = tempHeading + 360;
+                }
+                else
+                {
+                    heading = tempHeading;
+                }
             }
-            else if (expectedHeading - heading < 0)
+            else if (!turnCW && heading!= expectedHeading)
             {
-                heading = heading + Math.Max(expectedHeading - heading, -20);
-            }
-            else
-            {
-                heading = heading + Math.Min(expectedHeading - heading, 20);
+                int tempHeading;
+                landing = false;
+                tempHeading = (heading - Math.Min(Math.Abs(expectedHeading - heading)%360,20)) % 360;
+                if (tempHeading < 0)
+                {
+                    heading = tempHeading + 360;
+                }
+                else
+                {
+                    heading = tempHeading;
+                }
+                
             }
             //Rotate image to match heading
             (double scaleX, double scaleY) = vectorScale(heading);
             Airplane.Image = rotateImage(bmp, heading);
             //Update plane and info location with new information
-            Airplane.Location = new Point(Airplane.Location.X + (int)(speed/10 * scaleY), Airplane.Location.Y - (int)(speed/10 * scaleX));
-            planeinfo.Location = new Point(planeinfo.Location.X + (int)(speed/10 * scaleY), planeinfo.Location.Y - (int)(speed/10 * scaleX));
+            if (landing == false)
+            {
+                Airplane.Location = new Point(Airplane.Location.X + (int)(speed / 10 * scaleY), Airplane.Location.Y - (int)(speed / 10 * scaleX));
+                planeinfo.Location = new Point(planeinfo.Location.X + (int)(speed / 10 * scaleY), planeinfo.Location.Y - (int)(speed / 10 * scaleX));
+            }
             //Update plane info display with new info
             planeinfo.Text = String.Format("{0} {1} {2}\r\n{3} {4} {5}", Airplane.Tag, destAP, control, altitude, speed, heading);
             //When on approach incrementally decrease altitude and speed
             if (landing == true)
             {
-                double distToRunway = (Math.Sqrt(Math.Pow(Airplane.Location.X - 410 + 10, 2) + Math.Pow(Airplane.Location.Y - 285 + 10, 2)));
+                double distToRunway = (Math.Sqrt(Math.Pow(Airplane.Location.X - 850 + 12, 2) + Math.Pow(Airplane.Location.Y - 360 + 12, 2)));
                 if (distToRunway < 15)
                 {
                     f.Controls.Remove(Airplane);
@@ -345,25 +349,34 @@ namespace CS363_TeamP
                     }
                    
                 }
-            }  
+            }
+            if (Airplane.Location.X <= 335 || Airplane.Location.X >= f.ClientSize.Width || Airplane.Location.Y <= 0 || Airplane.Location.Y >= f.ClientSize.Height)
+            {
+                f.Controls.Remove(Airplane);
+                f.Controls.Remove(planeinfo);
+                f.Controls.Remove(tblPlaneInfo);
+            }
 
         }
 
-        public void tableMaker()
+        private void tableMaker()
         {
             //f.InitializeComponent();
             
             TextBox txtIDTitle = new System.Windows.Forms.TextBox();
             TextBox txtID = new System.Windows.Forms.TextBox();
             TextBox txtSpdTitle = new System.Windows.Forms.TextBox();
-            TextBox txtSpd = new System.Windows.Forms.TextBox();
+            txtSpd = new System.Windows.Forms.TextBox();
             tblPlaneInfo = new System.Windows.Forms.TableLayoutPanel();
             TableLayoutPanel tblTurnDirection = new System.Windows.Forms.TableLayoutPanel();
-            TextBox txtAlt = new System.Windows.Forms.TextBox();
+            txtAlt = new System.Windows.Forms.TextBox();
             TextBox txtAltTitle = new System.Windows.Forms.TextBox();
-            TextBox txtHead = new System.Windows.Forms.TextBox();
+            txtHead = new System.Windows.Forms.TextBox();
             TextBox txtHeadTitle = new System.Windows.Forms.TextBox();
-            Button btnSendCmd = new System.Windows.Forms.Button();
+            btnSendCmd = new System.Windows.Forms.Button();
+            rbCW = new System.Windows.Forms.RadioButton();
+            rbCCW = new System.Windows.Forms.RadioButton();
+            TextBox txtTurnTitle = new System.Windows.Forms.TextBox();
             tblPlaneInfo.SuspendLayout();
             f.SuspendLayout();
             // 
@@ -372,7 +385,7 @@ namespace CS363_TeamP
             txtIDTitle.Location = new System.Drawing.Point(3, 3);
             txtIDTitle.Name = "txtIDTitle";
             txtIDTitle.ReadOnly = true;
-            txtIDTitle.Size = new System.Drawing.Size(69, 26);
+            txtIDTitle.Size = new System.Drawing.Size(75, 26);
             txtIDTitle.TabIndex = 1;
             txtIDTitle.Text = "ID";
             // 
@@ -390,7 +403,7 @@ namespace CS363_TeamP
             txtSpdTitle.Location = new System.Drawing.Point(3, 35);
             txtSpdTitle.Name = "txtSpdTitle";
             txtSpdTitle.ReadOnly = true;
-            txtSpdTitle.Size = new System.Drawing.Size(69, 26);
+            txtSpdTitle.Size = new System.Drawing.Size(75, 26);
             txtSpdTitle.TabIndex = 3;
             txtSpdTitle.Text = "Speed";
             // 
@@ -401,6 +414,7 @@ namespace CS363_TeamP
             txtSpd.Size = new System.Drawing.Size(132, 26);
             txtSpd.TabIndex = 4;
             txtSpd.Text = speed.ToString();
+            txtSpd.LostFocus += new EventHandler(this.txtSpd_LostFocus);
             // 
             // tblPlaneInfo
             // 
@@ -408,6 +422,7 @@ namespace CS363_TeamP
             tblPlaneInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             tblPlaneInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             tblPlaneInfo.Controls.Add(btnSendCmd, 1, 5);
+            tblPlaneInfo.Controls.Add(txtTurnTitle, 0, 4);
             tblPlaneInfo.Controls.Add(tblTurnDirection, 1, 4); //FIXME: Add layoutTable with two radio buttons for CW and CCW turns.  Also, add "Turn Direction" title to first column!
             tblPlaneInfo.Controls.Add(txtHead, 1, 3);
             tblPlaneInfo.Controls.Add(txtAltTitle, 0, 2);
@@ -425,16 +440,42 @@ namespace CS363_TeamP
             tblPlaneInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tblPlaneInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tblPlaneInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tblPlaneInfo.Size = new System.Drawing.Size(217, 141);
-            tblPlaneInfo.Location = new System.Drawing.Point(0, f.ClientSize.Height - tblPlaneInfo.Bottom);
+            tblPlaneInfo.Size = new System.Drawing.Size(250, 167); //Original 217,141
+            tblPlaneInfo.Location = new System.Drawing.Point(40, f.ClientSize.Height - tblPlaneInfo.Bottom-10);
             tblPlaneInfo.TabIndex = 0;
             //
             //tblTurnDirection
             //
-            /********FINISH THIS***********/
-            //FIXME: Add CW radio button
-            //FIXME: Add CCW radio button
-            //FIXME: Add Turn Direction title
+            tblTurnDirection.ColumnCount = 2;
+            tblTurnDirection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tblTurnDirection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tblTurnDirection.Name = "tblTurnDirection";
+            tblTurnDirection.RowCount = 1;
+            tblTurnDirection.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tblTurnDirection.Controls.Add(rbCW, 0, 0);
+            tblTurnDirection.Controls.Add(rbCCW, 1, 0);
+            tblTurnDirection.Location = new System.Drawing.Point(78, 131);
+            tblTurnDirection.Size = new System.Drawing.Size(132, 26);
+            //
+            //rbCW      //FIXME: Add CW radio button
+            //
+            rbCW.Location = new System.Drawing.Point(1, 1);
+            rbCW.Size = new System.Drawing.Size(50, 26);
+            rbCW.Text = "CW";
+            //
+            //rbCCW     //FIXME: Add CCW radio button
+            //
+            rbCCW.Location = new System.Drawing.Point(35, 1);
+            rbCCW.Size = new System.Drawing.Size(50, 26);
+            rbCCW.Text = "CCW";
+            //
+            //txtTurnTitle      //FIXME: Add Turn Direction title
+            //
+            txtTurnTitle.Location = new System.Drawing.Point(3, 133);
+            txtTurnTitle.Name = "txtTurnTitle";
+            txtTurnTitle.Text = "Turn Direction";
+            txtTurnTitle.ReadOnly = true;
+            txtTurnTitle.Size = new System.Drawing.Size(75, 26);
             // 
             // txtAlt
             // 
@@ -443,13 +484,14 @@ namespace CS363_TeamP
             txtAlt.Size = new System.Drawing.Size(132, 26);
             txtAlt.TabIndex = 5;
             txtAlt.Text = altitude.ToString();
+            txtAlt.LostFocus += new EventHandler(this.txtAlt_LostFocus);
             // 
             // txtAltTitle
             // 
             txtAltTitle.Location = new System.Drawing.Point(3, 67);
             txtAltTitle.Name = "txtAltTitle";
             txtAltTitle.ReadOnly = true;
-            txtAltTitle.Size = new System.Drawing.Size(69, 26);
+            txtAltTitle.Size = new System.Drawing.Size(75, 26);
             txtAltTitle.TabIndex = 6;
             txtAltTitle.Text = "Altitude";
             // 
@@ -460,25 +502,27 @@ namespace CS363_TeamP
             txtHead.Size = new System.Drawing.Size(132, 26);
             txtHead.TabIndex = 7;
             txtHead.Text = heading.ToString();
+            txtHead.LostFocus += new EventHandler(this.txtHead_LostFocus);
             // 
             // txtHeadTitle
             // 
             txtHeadTitle.Location = new System.Drawing.Point(3, 99);
             txtHeadTitle.Name = "txtHeadTitle";
             txtHeadTitle.ReadOnly = true;
-            txtHeadTitle.Size = new System.Drawing.Size(69, 26);
+            txtHeadTitle.Size = new System.Drawing.Size(75, 26);
             txtHeadTitle.TabIndex = 8;
             txtHeadTitle.Text = "Heading";
             // 
             // btnSendCmd
             // 
-            btnSendCmd.Location = new System.Drawing.Point(78, 131);
+            btnSendCmd.Location = new System.Drawing.Point(78, 163); //Originally 78, 131
             btnSendCmd.Name = "btnSendCmd";
             btnSendCmd.Size = new System.Drawing.Size(132, 26);
             btnSendCmd.TabIndex = 1;
             btnSendCmd.Text = "Send Command";
+            btnSendCmd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             btnSendCmd.UseVisualStyleBackColor = true;
-            btnSendCmd.Click += new EventHandler((sender, e) => btnSendCmd_Click(sender, e, txtHead.Text, txtSpd.Text, txtAlt.Text ));
+            btnSendCmd.Click += new EventHandler((sender, e) => btnSendCmd_Click(sender, e, txtHead.Text, txtSpd.Text, txtAlt.Text, rbCW.Checked, rbCCW.Checked));
             //
             // Add table control
             //
@@ -488,7 +532,98 @@ namespace CS363_TeamP
             f.ResumeLayout(false);
             f.PerformLayout();
         }
+        //
+        //Airplane_Click - Changes blank control indicators to A (only incomming aircraft have blank control indicators), shows border on selected aircraft, and displays directive input table
+        //
+        public void Airplane_Click(object sender, EventArgs e)
+        {
+            if (control == ' ')
+            {
+                control = 'A';
+            }
+            PictureBox pic = sender as PictureBox;
+            foreach (Control item in f.Controls.OfType<TableLayoutPanel>())
+            {
+                if (item.Name == "tblPlaneInfo")
+                {
+                    f.Controls.Remove(item);
+                    item.Dispose();
+                }
+
+            }
+            foreach (PictureBox item in f.Controls.OfType<PictureBox>())
+            {
+                item.BorderStyle = BorderStyle.None;
+            }
+            Airplane.BorderStyle = BorderStyle.Fixed3D;
+            tableMaker();
+        }
+        //
+        //btnSendCmd_Click - Commits directives to expected heading, speed and altitude.  Also, closes input table and removes icon border.
+        //
+        public void btnSendCmd_Click(object sender, EventArgs e, string newHeading, string newSpeed, string newAltitude, bool CW, bool CCW)
+        {
+            if(!CW && !CCW && (Int32.Parse(newHeading) != heading))
+            {
+                MessageBox.Show("You must select a turn direction!");
+                return;
+            }
+            foreach (Control item in f.Controls.OfType<TableLayoutPanel>())
+            {
+                if (item.Name == "tblPlaneInfo")
+                {
+                    f.Controls.Remove(item);
+                    item.Dispose();
+                }
+
+            }
+            Airplane.BorderStyle = BorderStyle.None;
+            expectedSpeed = Int32.Parse(newSpeed);
+            expectedAltitude = Int32.Parse(newAltitude);
+            if (CW)
+            {
+                turnCW = true;
+            }
+            else
+            {
+                turnCW = false;
+            }
+            expectedHeading = Int32.Parse(newHeading);
+        }
+        //
+        //txtInfo_Changed - Ensures no textBoxes are left blank
+        //
+        private void txtAlt_LostFocus(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.txtAlt.Text))
+            {
+                txtAlt.Text = altitude.ToString();
+                MessageBox.Show("Altitude cannot be blank!");
+            }
+        }
+        //
+        //txtHead_Changed
+        //
+        private void txtHead_LostFocus(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.txtHead.Text))
+            {
+                txtHead.Text = heading.ToString();
+                MessageBox.Show("Heading cannot be blank!");
+            }
+        }
+        //
+        //txtSpd_Changed
+        //
+        private void txtSpd_LostFocus(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.txtSpd.Text))
+            {
+                txtSpd.Text = speed.ToString();
+                MessageBox.Show("Speed cannot be blank!");
+            }
+        }
     }
 
-    
-    }
+
+}

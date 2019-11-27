@@ -86,6 +86,8 @@
     <None Include="Resources\plane.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\BackgroundWithMenuSpace.png" />
+    <None Include="Resources\pngkit_dirt-explosion-png_1787968.png" />
     <Content Include="Resources\white-plane-icon1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
