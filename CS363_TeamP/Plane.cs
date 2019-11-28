@@ -307,6 +307,7 @@ namespace CS363_TeamP
                     f.Controls.Remove(Airplane);
                     f.Controls.Remove(planeinfo);
                     f.Controls.Remove(tblPlaneInfo);
+                    f.list.Remove(this);
                     
                 }
                 else if (distToRunway < 55)
@@ -355,6 +356,7 @@ namespace CS363_TeamP
                 f.Controls.Remove(Airplane);
                 f.Controls.Remove(planeinfo);
                 f.Controls.Remove(tblPlaneInfo);
+                f.list.Remove(this);
             }
 
         }

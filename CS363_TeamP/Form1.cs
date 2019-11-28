@@ -8,12 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
+using System.Media;
 
 namespace CS363_TeamP
 {
     public partial class Form1 : Form
     {
         public List<Plane> list;
+        SoundPlayer collisionAlert;
 
         public Form1()
         {
@@ -24,7 +26,7 @@ namespace CS363_TeamP
        
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            collisionAlert = new SoundPlayer(CS363_TeamP.Properties.Resources.WeaponHoming);
             
 
         }
@@ -65,17 +67,19 @@ namespace CS363_TeamP
                 }
             }
         }
-
         public void timer1_Tick(object sender, EventArgs e)
         {
             //pictureBox1.Location = new Point(pictureBox1.Location.X + 30, pictureBox1.Location.Y + 30);
             if (list.Count > 1)
             {
                 bool collide = false;
+                bool collisionImminent = false;
                 foreach (var aircraft in list)
                 {
-                    Rectangle collideRadius = new Rectangle(aircraft.Airplane.Left, aircraft.Airplane.Top, aircraft.Airplane.Width, aircraft.Airplane.Height);
-                    
+                    Rectangle collideBox1 = new Rectangle(aircraft.Airplane.Left, aircraft.Airplane.Top, aircraft.Airplane.Width, aircraft.Airplane.Height);
+                    //FIXME: Should the shape for CA warning be here? 
+                    int x1 = aircraft.Airplane.Location.X + 12;
+                    int y1 = aircraft.Airplane.Location.Y + 12;
                     foreach (var aircraft2 in list)
                     {
                         if (aircraft == aircraft2)
@@ -84,8 +88,10 @@ namespace CS363_TeamP
                         }
                         else
                         {
-                            Rectangle collideRadius2 = new Rectangle(aircraft2.Airplane.Left, aircraft2.Airplane.Top, aircraft2.Airplane.Width, aircraft2.Airplane.Height);
-                            if (collideRadius2.IntersectsWith(collideRadius))
+                            Rectangle collideBox2 = new Rectangle(aircraft2.Airplane.Left, aircraft2.Airplane.Top, aircraft2.Airplane.Width, aircraft2.Airplane.Height);
+                            int x2 = aircraft2.Airplane.Location.X + 12;
+                            int y2 = aircraft2.Airplane.Location.Y + 12;
+                            if (collideBox2.IntersectsWith(collideBox1) && Math.Abs(aircraft.altitude - aircraft2.altitude) < 1)
                             {
                                 PictureBox collision = new PictureBox();
                                 collision.BackColor = this.pictureBox1.BackColor;
@@ -106,7 +112,26 @@ namespace CS363_TeamP
                                 collide = true;
                                 break;
                             }
-                            
+                            int dx = x2 - x1;
+                            int dy = y2 - y1;
+                            double dist = Math.Sqrt(dx * dx + dy * dy);
+                            //MessageBox.Show(string.Format("D: {0}", dist));
+                            if (dist <= 25)
+                            {
+                                collisionImminent = true;
+                                //MessageBox.Show("Collision Imminent");
+                                this.txtCollisionImminent.Visible = true;
+                                aircraft.planeinfo.ForeColor = Color.Red;
+                                aircraft2.planeinfo.ForeColor = Color.Red;
+                            }
+                            else if (collisionImminent == false)
+                            {
+                                //   this.txtCollisionAlert.Visible = false;
+                                aircraft.planeinfo.ForeColor = Color.White;
+                                aircraft2.planeinfo.ForeColor = Color.White;
+                                this.txtCollisionImminent.Visible = false;
+                            }
+
                         }
                     }
                     if (collide == true)
@@ -114,14 +139,18 @@ namespace CS363_TeamP
                         break;
                     }
                 }
-            }
+                if(collisionImminent == true)
+                {
+                    collisionAlert.Play();
+                }
 
+            }
         }
-        //***************************************************************************************************************
-        //These paint events are used for troubleshooting/dev purposes and need to be removed for the final product!!!!!
-        //***************************************************************************************************************
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
+            //***************************************************************************************************************
+            //These paint events are used for troubleshooting/dev purposes and need to be removed for the final product!!!!!
+            //***************************************************************************************************************
+            private void Form1_Paint(object sender, PaintEventArgs e)
+            {
             int centerX = 850;
             int centerY = 360;
 
@@ -139,6 +168,6 @@ namespace CS363_TeamP
             g.DrawLine(p, point1, point3);
             
 
-        }
+            }
     }
 }
