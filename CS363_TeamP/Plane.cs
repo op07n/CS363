@@ -16,10 +16,10 @@ namespace CS363_TeamP
     {
         private int speed;
         public string ID;
-        private char control = ' ';
+        public char control = ' ';
         public int altitude;
         private int heading;
-        private string destAP;
+        public string destAP;
         private int expectedSpeed;
         private int expectedAltitude;
         private int expectedHeading;
@@ -79,7 +79,10 @@ namespace CS363_TeamP
                 control = 'D';
             }
             //Generate random airplane info
-            infoGenerator(); 
+            if (string.IsNullOrEmpty(ID))
+            {
+                infoGenerator();
+            }         
             //Generate and size bitmap
             bmp = new Bitmap("C:\\Users\\patri\\Source\\Repos\\CS363\\CS363_TeamP\\Resources\\planeIconSmall.png");
             int dpi = 96;
@@ -115,7 +118,7 @@ namespace CS363_TeamP
             
         }
 
-        private void infoGenerator() 
+        public void infoGenerator() 
         {
             //Variables needed for generating random info
             var random = new Random();
@@ -165,8 +168,16 @@ namespace CS363_TeamP
             }
             else
             {
-                altitude = random.Next(100, 200);
-                expectedAltitude = 100;
+                altitude = random.Next(80, 200);
+                if(altitude > 100)
+                {
+                    expectedAltitude = 100;
+                }
+                else
+                {
+                    expectedAltitude = altitude;
+                }
+                
             }
             //Set expected heading
             if (control == 'D')
@@ -234,18 +245,18 @@ namespace CS363_TeamP
             {
                 speed = speed + Math.Min(expectedSpeed - speed, 20);
             }
-            //Curtail altitude changes to 2000ft (20) per update
-            if (expectedAltitude == altitude || Math.Abs(expectedAltitude - altitude) < 20)
+            //Curtail altitude changes to 1000ft (10) per update
+            if (expectedAltitude == altitude || Math.Abs(expectedAltitude - altitude) < 10)
             {
                 altitude = expectedAltitude;
             }
             else if (expectedAltitude - altitude < 0)
             {
-                altitude = altitude + Math.Max(expectedAltitude - altitude, -20);
+                altitude = altitude + Math.Max(expectedAltitude - altitude, -10);
             }
             else
             {
-                altitude = altitude + Math.Min(expectedAltitude - altitude, 20);
+                altitude = altitude + Math.Min(expectedAltitude - altitude, 10);
             }
             //Curtail heading changes to 20 deg per update   
             double landingAngle = (Math.Atan2(Airplane.Location.Y - 360 + 12, Airplane.Location.X - 850 + 12) * (180 / Math.PI));
@@ -307,7 +318,7 @@ namespace CS363_TeamP
                     f.Controls.Remove(Airplane);
                     f.Controls.Remove(planeinfo);
                     f.Controls.Remove(tblPlaneInfo);
-                    f.list.Remove(this);
+                    f.InFlightList.Remove(this);
                     
                 }
                 else if (distToRunway < 55)
@@ -356,7 +367,7 @@ namespace CS363_TeamP
                 f.Controls.Remove(Airplane);
                 f.Controls.Remove(planeinfo);
                 f.Controls.Remove(tblPlaneInfo);
-                f.list.Remove(this);
+                f.InFlightList.Remove(this);
             }
 
         }
@@ -459,19 +470,19 @@ namespace CS363_TeamP
             tblTurnDirection.Location = new System.Drawing.Point(78, 131);
             tblTurnDirection.Size = new System.Drawing.Size(132, 26);
             //
-            //rbCW      //FIXME: Add CW radio button
+            //rbCW
             //
             rbCW.Location = new System.Drawing.Point(1, 1);
             rbCW.Size = new System.Drawing.Size(50, 26);
             rbCW.Text = "CW";
             //
-            //rbCCW     //FIXME: Add CCW radio button
+            //rbCCW
             //
             rbCCW.Location = new System.Drawing.Point(35, 1);
             rbCCW.Size = new System.Drawing.Size(50, 26);
             rbCCW.Text = "CCW";
             //
-            //txtTurnTitle      //FIXME: Add Turn Direction title
+            //txtTurnTitle
             //
             txtTurnTitle.Location = new System.Drawing.Point(3, 133);
             txtTurnTitle.Name = "txtTurnTitle";

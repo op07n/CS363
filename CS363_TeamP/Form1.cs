@@ -14,73 +14,46 @@ namespace CS363_TeamP
 {
     public partial class Form1 : Form
     {
-        public List<Plane> list;
+        //Instantiate lists to store all Plane classes generated
+        public List<Plane> InFlightList;
+        public List<Plane> TakeoffList;
+        //Instantiate soundplayer for collision imminent alerts
         SoundPlayer collisionAlert;
+        
 
         public Form1()
         {
             InitializeComponent();
-            list = new List<Plane>();
-        }
-
-       
-        private void Form1_Load(object sender, EventArgs e)
-        {
+            //Define InFlightList and TakeoffQueue as lists of planes
+            InFlightList = new List<Plane>();
+            TakeoffList = new List<Plane>();
+            //Define collisionAlert sound player
             collisionAlert = new SoundPlayer(CS363_TeamP.Properties.Resources.WeaponHoming);
             
-
         }
-
-        private void Form1_Click(object sender, EventArgs e)    //FIXME: Need logic to determine generation point and initial heading
+        //
+        //Form1_Load
+        //
+        private void Form1_Load(object sender, EventArgs e)
         {
-            MouseEventArgs me = (MouseEventArgs)e;
-            Plane plane = new Plane();
-            list.Add(plane);
-            int X = MousePosition.X;
-            int Y = MousePosition.Y;
             
-            //MessageBox.Show(string.Format("X: {0}, Y: {1}, A: {2}", me.X, me.Y, (Math.Atan2(me.Y-360,me.X-850) * (180/Math.PI)))); //useful for determining mouse click location and angle from center
-            if (me.Button == MouseButtons.Right)
-            {
-                //Outbound aircraft generation
-                if (Math.Sqrt(Math.Pow(me.X - 850, 2) + Math.Pow(me.Y - 360, 2)) < 355) 
-                {
-                    plane.mkPlane(this, 4);
-                }
-                else    //FIXME: Need logic to determine inbound start location
-                {
-                    if (me.Y < 360)
-                    {
-                        if (me.X < 850)
-                        {
-                            plane.mkPlane(this, 1);
-                        }
-                        else
-                        {
-                            plane.mkPlane(this, 2);
-                        }
-                    }
-                    else
-                    {
-                        plane.mkPlane(this, 3);
-                    }
-                }
-            }
+            
         }
-        public void timer1_Tick(object sender, EventArgs e)
+        //
+        //collisionAvoidance - Generates warnings if two aircraft violate CA distances from eachother. Also removes aircraft that collide and places collision indicator.
+        //
+        public void collisionAvoidance()
         {
-            //pictureBox1.Location = new Point(pictureBox1.Location.X + 30, pictureBox1.Location.Y + 30);
-            if (list.Count > 1)
+            if (InFlightList.Count > 1)
             {
                 bool collide = false;
                 bool collisionImminent = false;
-                foreach (var aircraft in list)
+                foreach (var aircraft in InFlightList)
                 {
                     Rectangle collideBox1 = new Rectangle(aircraft.Airplane.Left, aircraft.Airplane.Top, aircraft.Airplane.Width, aircraft.Airplane.Height);
-                    //FIXME: Should the shape for CA warning be here? 
-                    int x1 = aircraft.Airplane.Location.X + 12;
-                    int y1 = aircraft.Airplane.Location.Y + 12;
-                    foreach (var aircraft2 in list)
+                    int x1 = aircraft.Airplane.Location.X + aircraft.Airplane.Size.Width / 2;
+                    int y1 = aircraft.Airplane.Location.Y + aircraft.Airplane.Size.Height / 2;
+                    foreach (var aircraft2 in InFlightList)
                     {
                         if (aircraft == aircraft2)
                         {
@@ -89,8 +62,8 @@ namespace CS363_TeamP
                         else
                         {
                             Rectangle collideBox2 = new Rectangle(aircraft2.Airplane.Left, aircraft2.Airplane.Top, aircraft2.Airplane.Width, aircraft2.Airplane.Height);
-                            int x2 = aircraft2.Airplane.Location.X + 12;
-                            int y2 = aircraft2.Airplane.Location.Y + 12;
+                            int x2 = aircraft2.Airplane.Location.X + aircraft2.Airplane.Size.Width/2;
+                            int y2 = aircraft2.Airplane.Location.Y + aircraft2.Airplane.Size.Height/2;
                             if (collideBox2.IntersectsWith(collideBox1) && Math.Abs(aircraft.altitude - aircraft2.altitude) < 1)
                             {
                                 PictureBox collision = new PictureBox();
@@ -107,8 +80,8 @@ namespace CS363_TeamP
                                 this.Controls.Remove(aircraft2.planeinfo);
                                 this.Controls.Remove(aircraft2.tblPlaneInfo);
                                 this.Controls.Add(collision);
-                                list.Remove(aircraft);
-                                list.Remove(aircraft2);
+                                InFlightList.Remove(aircraft);
+                                InFlightList.Remove(aircraft2);
                                 collide = true;
                                 break;
                             }
@@ -116,7 +89,7 @@ namespace CS363_TeamP
                             int dy = y2 - y1;
                             double dist = Math.Sqrt(dx * dx + dy * dy);
                             //MessageBox.Show(string.Format("D: {0}", dist));
-                            if (dist <= 25)
+                            if (dist <= 50 && Math.Abs(aircraft.altitude - aircraft2.altitude) <= 10)
                             {
                                 collisionImminent = true;
                                 //MessageBox.Show("Collision Imminent");
@@ -139,35 +112,109 @@ namespace CS363_TeamP
                         break;
                     }
                 }
-                if(collisionImminent == true)
+                if (collisionImminent == true)
                 {
                     collisionAlert.Play();
                 }
+            }
+        }
+        //
+        //Form1_Click - Generates aircraft on right mouse click.  Determines plane generation location based on mouse click location.
+        //
+        private void Form1_Click(object sender, EventArgs e)    //FIXME: Need logic to determine generation point and initial heading
+        {
+            MouseEventArgs me = (MouseEventArgs)e;
+            Plane plane = new Plane();
+            int X = MousePosition.X;
+            int Y = MousePosition.Y;
+
+            //MessageBox.Show(string.Format("X: {0}, Y: {1}, A: {2}", me.X, me.Y, (Math.Atan2(me.Y-360,me.X-850) * (180/Math.PI)))); //useful for determining mouse click location and angle from center
+            if (me.Button == MouseButtons.Right)
+            {
+                //Outbound aircraft generation
+                if (Math.Sqrt(Math.Pow(me.X - 850, 2) + Math.Pow(me.Y - 360, 2)) < 355)
+                {
+                    TakeoffList.Add(plane);
+                    plane.control = 'D';
+                    plane.infoGenerator();
+                    //plane.mkPlane(this, 4);
+                    this.dgvTakeoffQueue.Rows.Add(plane.ID, plane.destAP, "0:00");
+                }
+                else    //FIXME: Need logic to determine inbound start location
+                {
+                    InFlightList.Add(plane);
+                    if (me.Y < 360)
+                    {
+                        if (me.X < 850)
+                        {
+                            plane.mkPlane(this, 1);
+                        }
+                        else
+                        {
+                            plane.mkPlane(this, 2);
+                        }
+                    }
+                    else
+                    {
+                        plane.mkPlane(this, 3);
+                    }
+                }
+            }
+        }
+        //
+        //timer1_Tick - main timer used by all classes for syncronize movement and events
+        //
+        public void timer1_Tick(object sender, EventArgs e)
+        {
+            collisionAvoidance();
+        }
+        //***************************************************************************************************************
+        //These paint events are used for troubleshooting/dev purposes and need to be removed/commented for the final product!!!!!
+        //***************************************************************************************************************
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+        int centerX = 850;
+        int centerY = 360;
+
+        Graphics g = e.Graphics;
+        Pen p = new Pen(Color.LawnGreen, 2);
+        //Give us a rough idea of where the middle is.  We can use this for the math to determine if the mouse click is within or outside the airspace.
+        g.DrawEllipse(p, 495, 8, 710, 710); 
+        //This graphic gives us an arc for the runway approach.
+        Point point1 = new Point(centerX, centerY);
+        Point point2 = new Point(centerX + (int)(Math.Cos(-52 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-52 * (Math.PI / 180)) * 400));
+        Point pointC = new Point(centerX + (int)(Math.Cos(-55 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-55 * (Math.PI / 180)) * 400));
+        Point point3 = new Point(centerX + (int)(Math.Cos(-58 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-58 * (Math.PI / 180)) * 400));
+        g.DrawLine(p, point1, point2);
+        g.DrawLine(p, point1, pointC);
+        g.DrawLine(p, point1, point3);
+        }
+
+        public void dgvTakeoffQueue_CellClick(Object sender, DataGridViewCellEventArgs e)
+        {
+            
+            if (e.ColumnIndex == dgvTakeoffQueue.Columns["btnTakeoff"].Index)
+            {
+                int selectedRow = e.RowIndex;
+                DataGridViewRow Row = dgvTakeoffQueue.Rows[selectedRow];
+                foreach (var airplane in TakeoffList)
+                {
+                    if (airplane.ID == Row.Cells[0].Value.ToString())
+                    {
+                        //Plane planeToTakeoff = airplane;
+                        InFlightList.Add(airplane);
+                        airplane.mkPlane(this, 4);
+                        dgvTakeoffQueue.Rows.Remove(Row);
+                        TakeoffList.Remove(airplane);
+                        break;
+                    }
+                }
+                
+                   
+
+                
 
             }
         }
-            //***************************************************************************************************************
-            //These paint events are used for troubleshooting/dev purposes and need to be removed for the final product!!!!!
-            //***************************************************************************************************************
-            private void Form1_Paint(object sender, PaintEventArgs e)
-            {
-            int centerX = 850;
-            int centerY = 360;
-
-            Graphics g = e.Graphics;
-            Pen p = new Pen(Color.LawnGreen, 2);
-            //Give us a rough idea of where the middle is.  We can use this for the math to determine if the mouse click is within or outside the airspace.
-            g.DrawEllipse(p, 495, 8, 710, 710); 
-            //This graphic gives us an arc for the runway approach.
-            Point point1 = new Point(centerX, centerY);
-            Point point2 = new Point(centerX + (int)(Math.Cos(-52 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-52 * (Math.PI / 180)) * 400));
-            Point pointC = new Point(centerX + (int)(Math.Cos(-55 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-55 * (Math.PI / 180)) * 400));
-            Point point3 = new Point(centerX + (int)(Math.Cos(-58 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-58 * (Math.PI / 180)) * 400));
-            g.DrawLine(p, point1, point2);
-            g.DrawLine(p, point1, pointC);
-            g.DrawLine(p, point1, point3);
-            
-
-            }
     }
 }
