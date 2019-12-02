@@ -46,6 +46,7 @@ namespace CS363_TeamP
         int x = 100;
         int y = 100;
         Form1 f;
+        public int waitingTimeSec;
 
 
 
@@ -84,7 +85,7 @@ namespace CS363_TeamP
                 infoGenerator();
             }         
             //Generate and size bitmap
-            bmp = new Bitmap("C:\\Users\\patri\\Source\\Repos\\CS363\\CS363_TeamP\\Resources\\planeIconSmall.png");
+            bmp = new Bitmap(Properties.Resources.planeIconSmall);
             int dpi = 96;
             bmp.SetResolution(dpi, dpi);
             //Assign airplane picture box attributes
@@ -369,7 +370,14 @@ namespace CS363_TeamP
                 f.Controls.Remove(tblPlaneInfo);
                 f.InFlightList.Remove(this);
             }
-
+            /*FUTURE: If there is time make a new 'current' column where the plane's current info can be displayed
+            if (Airplane.BorderStyle == BorderStyle.Fixed3D)
+            {
+                txtCurrentAlt.Text = altitude.ToString();
+                txtCurrentSpd.Text = speed.ToString();
+                txtCurrentHead.Text = heading.ToString();
+            }
+            */
         }
 
         private void tableMaker()
@@ -426,8 +434,8 @@ namespace CS363_TeamP
             txtSpd.Name = "txtSpd";
             txtSpd.Size = new System.Drawing.Size(132, 26);
             txtSpd.TabIndex = 4;
-            txtSpd.Text = speed.ToString();
-            txtSpd.LostFocus += new EventHandler(this.txtSpd_LostFocus);
+            //txtSpd.Text = speed.ToString();
+            //txtSpd.LostFocus += new EventHandler(this.txtSpd_LostFocus);
             // 
             // tblPlaneInfo
             // 
@@ -496,8 +504,8 @@ namespace CS363_TeamP
             txtAlt.Name = "txtAlt";
             txtAlt.Size = new System.Drawing.Size(132, 26);
             txtAlt.TabIndex = 5;
-            txtAlt.Text = altitude.ToString();
-            txtAlt.LostFocus += new EventHandler(this.txtAlt_LostFocus);
+            //txtAlt.Text = altitude.ToString();
+            //txtAlt.LostFocus += new EventHandler(this.txtAlt_LostFocus);
             // 
             // txtAltTitle
             // 
@@ -514,8 +522,8 @@ namespace CS363_TeamP
             txtHead.Name = "txtHead";
             txtHead.Size = new System.Drawing.Size(132, 26);
             txtHead.TabIndex = 7;
-            txtHead.Text = heading.ToString();
-            txtHead.LostFocus += new EventHandler(this.txtHead_LostFocus);
+            //txtHead.Text = heading.ToString();
+            //txtHead.LostFocus += new EventHandler(this.txtHead_LostFocus);
             // 
             // txtHeadTitle
             // 
@@ -540,6 +548,7 @@ namespace CS363_TeamP
             // Add table control
             //
             f.Controls.Add(tblPlaneInfo);
+            tblPlaneInfo.BringToFront();
             tblPlaneInfo.ResumeLayout(false);
             tblPlaneInfo.PerformLayout();
             f.ResumeLayout(false);
@@ -576,10 +585,22 @@ namespace CS363_TeamP
         //
         public void btnSendCmd_Click(object sender, EventArgs e, string newHeading, string newSpeed, string newAltitude, bool CW, bool CCW)
         {
-            if(!CW && !CCW && (Int32.Parse(newHeading) != heading))
+            if (!string.IsNullOrEmpty(newHeading))
             {
-                MessageBox.Show("You must select a turn direction!");
-                return;
+                if (!CW && !CCW && (Int32.Parse(newHeading) != heading))
+                {
+                    MessageBox.Show("You must select a turn direction!");
+                    return;
+                }
+                if (CW)
+                {
+                    turnCW = true;
+                }
+                else
+                {
+                    turnCW = false;
+                }
+                expectedHeading = Int32.Parse(newHeading);
             }
             foreach (Control item in f.Controls.OfType<TableLayoutPanel>())
             {
@@ -591,20 +612,17 @@ namespace CS363_TeamP
 
             }
             Airplane.BorderStyle = BorderStyle.None;
-            expectedSpeed = Int32.Parse(newSpeed);
-            expectedAltitude = Int32.Parse(newAltitude);
-            if (CW)
+            if (!string.IsNullOrEmpty(newSpeed))
             {
-                turnCW = true;
+                expectedSpeed = Int32.Parse(newSpeed);
             }
-            else
+            if (!string.IsNullOrEmpty(newAltitude))
             {
-                turnCW = false;
+                expectedAltitude = Int32.Parse(newAltitude);
             }
-            expectedHeading = Int32.Parse(newHeading);
         }
         //
-        //txtInfo_Changed - Ensures no textBoxes are left blank
+        //txtAlt_Changed - Ensures no textBoxes are left blank
         //
         private void txtAlt_LostFocus(object sender, EventArgs e)
         {

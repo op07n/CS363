@@ -40,6 +40,7 @@
             this.waitTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnTakeoff = new System.Windows.Forms.DataGridViewButtonColumn();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTakeoffQueue)).BeginInit();
             this.SuspendLayout();
@@ -117,7 +118,7 @@
             this.dgvTakeoffQueue.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dgvTakeoffQueue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvTakeoffQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvTakeoffQueue.Size = new System.Drawing.Size(312, 449);
+            this.dgvTakeoffQueue.Size = new System.Drawing.Size(312, 348);
             this.dgvTakeoffQueue.TabIndex = 2;
             this.dgvTakeoffQueue.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTakeoffQueue_CellClick);
             // 
@@ -167,6 +168,14 @@
             this.textBox1.Text = "Takeoff Queue";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(334, 739);
+            this.panel1.TabIndex = 4;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -179,6 +188,7 @@
             this.Controls.Add(this.dgvTakeoffQueue);
             this.Controls.Add(this.txtCollisionImminent);
             this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
@@ -203,6 +213,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn waitTime;
         private System.Windows.Forms.DataGridViewButtonColumn btnTakeoff;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

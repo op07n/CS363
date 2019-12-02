@@ -73,9 +73,49 @@ namespace CS363_TeamP.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap plane {
+        internal static System.Drawing.Bitmap Cloud1 {
             get {
-                object obj = ResourceManager.GetObject("plane", resourceCulture);
+                object obj = ResourceManager.GetObject("Cloud1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cloud2 {
+            get {
+                object obj = ResourceManager.GetObject("Cloud2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cloud3 {
+            get {
+                object obj = ResourceManager.GetObject("Cloud3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cloud4 {
+            get {
+                object obj = ResourceManager.GetObject("Cloud4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap planeIconSmall {
+            get {
+                object obj = ResourceManager.GetObject("planeIconSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -19,6 +19,7 @@ namespace CS363_TeamP
         public List<Plane> TakeoffList;
         //Instantiate soundplayer for collision imminent alerts
         SoundPlayer collisionAlert;
+        int pointX = 0, pointY = 0;
         
 
         public Form1()
@@ -167,27 +168,45 @@ namespace CS363_TeamP
         public void timer1_Tick(object sender, EventArgs e)
         {
             collisionAvoidance();
+            pointX += 5;
+            pointY += 5;
+            Invalidate();
         }
-        //***************************************************************************************************************
-        //These paint events are used for troubleshooting/dev purposes and need to be removed/commented for the final product!!!!!
-        //***************************************************************************************************************
+        //
+        //Form1_Paint - Used to draw weather graphics and make troubleshooting graphics
+        //
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-        int centerX = 850;
-        int centerY = 360;
+            //Attempt to use a weather class - Cannot get graphics to update using Invalidate or Refresh
+            //Weather weather = new Weather();
+            //weather.mkCloud(this, g);
+            //var bmp = new Bitmap(Properties.Resources.Cloud1);
 
-        Graphics g = e.Graphics;
-        Pen p = new Pen(Color.LawnGreen, 2);
-        //Give us a rough idea of where the middle is.  We can use this for the math to determine if the mouse click is within or outside the airspace.
-        g.DrawEllipse(p, 495, 8, 710, 710); 
-        //This graphic gives us an arc for the runway approach.
-        Point point1 = new Point(centerX, centerY);
-        Point point2 = new Point(centerX + (int)(Math.Cos(-52 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-52 * (Math.PI / 180)) * 400));
-        Point pointC = new Point(centerX + (int)(Math.Cos(-55 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-55 * (Math.PI / 180)) * 400));
-        Point point3 = new Point(centerX + (int)(Math.Cos(-58 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-58 * (Math.PI / 180)) * 400));
-        g.DrawLine(p, point1, point2);
-        g.DrawLine(p, point1, pointC);
-        g.DrawLine(p, point1, point3);
+            //Directly drawing weather graphics to form for demonstration purposes.  We would need weather class to be functional for production.
+            Graphics g = e.Graphics;
+            g.DrawImage(Properties.Resources.Cloud4, pointX, pointY);
+            g.DrawImage(Properties.Resources.Cloud3, pointX, pointY-200);
+            g.DrawImage(Properties.Resources.Cloud1, pointX+600, pointY + 100);
+            g.DrawImage(Properties.Resources.Cloud3, pointX + 600, pointY + 500);
+
+            //***************************************************************************************************************
+            //These paint events are used for troubleshooting/dev purposes and need to be removed/commented for the final product!!!!!
+            //***************************************************************************************************************
+            /*
+            int centerX = 850;
+            int centerY = 360;
+            Pen p = new Pen(Color.LawnGreen, 2);
+            //Give us a rough idea of where the middle is.  We can use this for the math to determine if the mouse click is within or outside the airspace.
+            g.DrawEllipse(p, 495, 8, 710, 710); 
+            //This graphic gives us an arc for the runway approach.
+            Point point1 = new Point(centerX, centerY);
+            Point point2 = new Point(centerX + (int)(Math.Cos(-51 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-52 * (Math.PI / 180)) * 400));
+            Point pointC = new Point(centerX + (int)(Math.Cos(-55 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-55 * (Math.PI / 180)) * 400));
+            Point point3 = new Point(centerX + (int)(Math.Cos(-59 * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(-58 * (Math.PI / 180)) * 400));
+            g.DrawLine(p, point1, point2);
+            g.DrawLine(p, point1, pointC);
+            g.DrawLine(p, point1, point3);
+            */
         }
 
         public void dgvTakeoffQueue_CellClick(Object sender, DataGridViewCellEventArgs e)
