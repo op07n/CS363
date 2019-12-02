@@ -259,7 +259,7 @@ namespace CS363_TeamP
             {
                 altitude = altitude + Math.Min(expectedAltitude - altitude, 10);
             }
-            //Curtail heading changes to 20 deg per update   
+            //Check if plane is on approach - heading = 220, altitude 
             double landingAngle = (Math.Atan2(Airplane.Location.Y - 360 + 12, Airplane.Location.X - 850 + 12) * (180 / Math.PI));
             if (heading == 220 && ((landingAngle > -58 && landingAngle < -50 && altitude <= 50 && altitude >= 10) || landing == true))
             {

@@ -167,10 +167,35 @@ namespace CS363_TeamP
         //
         public void timer1_Tick(object sender, EventArgs e)
         {
+            //Check if any planes are violating eachother's safe space
             collisionAvoidance();
+            //Update cloud location
             pointX += 5;
             pointY += 5;
             Invalidate();
+            //Increment wait time for any planes awaiting takeoff
+            foreach (DataGridViewRow row in dgvTakeoffQueue.Rows)
+            {
+                string time = row.Cells[2].Value.ToString();
+                string secs;
+                int sec = Int32.Parse(time.Split(':')[1]);
+                int min = Int32.Parse(time.Split(':')[0]);
+                sec += timer1.Interval/1000;
+                if(sec > 59)
+                {
+                    min += 1;
+                    sec = sec % 60;
+                }
+                if (sec < 10)
+                {
+                    secs = 0 + sec.ToString();
+                }
+                else
+                {
+                    secs = sec.ToString();
+                }
+                row.Cells[2].Value = min.ToString() + ':' + secs;
+            }
         }
         //
         //Form1_Paint - Used to draw weather graphics and make troubleshooting graphics
