@@ -139,7 +139,7 @@ namespace CS363_TeamP
                     plane.control = 'D';
                     plane.infoGenerator();
                     //plane.mkPlane(this, 4);
-                    this.dgvTakeoffQueue.Rows.Add(plane.ID, plane.destAP, "0:00");
+                    this.dgvTakeoffQueue.Rows.Add(plane.ID, plane.destAP, plane.runwayID, "0:00");
                 }
                 else    //FIXME: Need logic to determine inbound start location
                 {
@@ -176,7 +176,7 @@ namespace CS363_TeamP
             //Increment wait time for any planes awaiting takeoff
             foreach (DataGridViewRow row in dgvTakeoffQueue.Rows)
             {
-                string time = row.Cells[2].Value.ToString();
+                string time = row.Cells[3].Value.ToString();
                 string secs;
                 int sec = Int32.Parse(time.Split(':')[1]);
                 int min = Int32.Parse(time.Split(':')[0]);
@@ -194,7 +194,7 @@ namespace CS363_TeamP
                 {
                     secs = sec.ToString();
                 }
-                row.Cells[2].Value = min.ToString() + ':' + secs;
+                row.Cells[3].Value = min.ToString() + ':' + secs;
             }
         }
         //

@@ -37,6 +37,7 @@
             this.dgvTakeoffQueue = new System.Windows.Forms.DataGridView();
             this.flightID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Dest = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.runwayID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.waitTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnTakeoff = new System.Windows.Forms.DataGridViewButtonColumn();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -71,7 +72,7 @@
             this.txtCollisionImminent.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCollisionImminent.ForeColor = System.Drawing.Color.Red;
             this.txtCollisionImminent.Location = new System.Drawing.Point(8, 20);
-            this.txtCollisionImminent.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCollisionImminent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtCollisionImminent.Name = "txtCollisionImminent";
             this.txtCollisionImminent.Size = new System.Drawing.Size(316, 28);
             this.txtCollisionImminent.TabIndex = 1;
@@ -99,6 +100,7 @@
             this.dgvTakeoffQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.flightID,
             this.Dest,
+            this.runwayID,
             this.waitTime,
             this.btnTakeoff});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -116,6 +118,8 @@
             this.dgvTakeoffQueue.Name = "dgvTakeoffQueue";
             this.dgvTakeoffQueue.ReadOnly = true;
             this.dgvTakeoffQueue.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dgvTakeoffQueue.RowHeadersVisible = false;
+            this.dgvTakeoffQueue.RowHeadersWidth = 62;
             this.dgvTakeoffQueue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvTakeoffQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvTakeoffQueue.Size = new System.Drawing.Size(312, 348);
@@ -125,6 +129,7 @@
             // flightID
             // 
             this.flightID.HeaderText = "Flight ID";
+            this.flightID.MinimumWidth = 8;
             this.flightID.Name = "flightID";
             this.flightID.ReadOnly = true;
             this.flightID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -133,14 +138,23 @@
             // Dest
             // 
             this.Dest.HeaderText = "Dest. AP";
+            this.Dest.MinimumWidth = 8;
             this.Dest.Name = "Dest";
             this.Dest.ReadOnly = true;
             this.Dest.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Dest.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // runwayID
+            // 
+            this.runwayID.HeaderText = "Runway ID";
+            this.runwayID.MinimumWidth = 8;
+            this.runwayID.Name = "runwayID";
+            this.runwayID.ReadOnly = true;
+            // 
             // waitTime
             // 
             this.waitTime.HeaderText = "Wait Time";
+            this.waitTime.MinimumWidth = 8;
             this.waitTime.Name = "waitTime";
             this.waitTime.ReadOnly = true;
             this.waitTime.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -149,6 +163,7 @@
             // btnTakeoff
             // 
             this.btnTakeoff.HeaderText = "Action";
+            this.btnTakeoff.MinimumWidth = 8;
             this.btnTakeoff.Name = "btnTakeoff";
             this.btnTakeoff.ReadOnly = true;
             this.btnTakeoff.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -190,7 +205,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form1";
             this.Text = "NextGen ATC Simulator";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -208,12 +223,13 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TextBox txtCollisionImminent;
         private System.Windows.Forms.DataGridView dgvTakeoffQueue;
-        private System.Windows.Forms.DataGridViewTextBoxColumn flightID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Dest;
-        private System.Windows.Forms.DataGridViewTextBoxColumn waitTime;
-        private System.Windows.Forms.DataGridViewButtonColumn btnTakeoff;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn flightID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Dest;
+        private System.Windows.Forms.DataGridViewTextBoxColumn runwayID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn waitTime;
+        private System.Windows.Forms.DataGridViewButtonColumn btnTakeoff;
     }
 }
 

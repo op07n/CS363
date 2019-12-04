@@ -47,6 +47,7 @@ namespace CS363_TeamP
         int y = 100;
         Form1 f;
         public int waitingTimeSec;
+        public string runwayID;
 
 
 
@@ -187,11 +188,13 @@ namespace CS363_TeamP
                 {
                     expectedHeading = 240;
                     turnCW = true;
+                    runwayID = "22R";
                 }
                 else
                 {
                     expectedHeading = 94;
                     turnCW = false;
+                    runwayID = "22L";
                 }
             }
             else
