@@ -45,6 +45,7 @@ namespace CS363_TeamP
         //
         public void collisionAvoidance()
         {
+            
             if (InFlightList.Count > 1)
             {
                 bool collide = false;
@@ -52,8 +53,9 @@ namespace CS363_TeamP
                 foreach (var aircraft in InFlightList)
                 {
                     Rectangle collideBox1 = new Rectangle(aircraft.Airplane.Left, aircraft.Airplane.Top, aircraft.Airplane.Width, aircraft.Airplane.Height);
-                    int x1 = aircraft.Airplane.Location.X + aircraft.Airplane.Size.Width / 2;
-                    int y1 = aircraft.Airplane.Location.Y + aircraft.Airplane.Size.Height / 2;
+                    (double X1, double Y1) = aircraft.vectorScale(aircraft.heading);
+                    int x1 = aircraft.Airplane.Location.X + (int)(aircraft.speed / 10 * Y1);// + aircraft.Airplane.Size.Width / 2;
+                    int y1 = aircraft.Airplane.Location.Y - (int)(aircraft.speed / 10 * X1);// + aircraft.Airplane.Size.Height / 2;
                     foreach (var aircraft2 in InFlightList)
                     {
                         if (aircraft == aircraft2)
@@ -63,9 +65,10 @@ namespace CS363_TeamP
                         else
                         {
                             Rectangle collideBox2 = new Rectangle(aircraft2.Airplane.Left, aircraft2.Airplane.Top, aircraft2.Airplane.Width, aircraft2.Airplane.Height);
-                            int x2 = aircraft2.Airplane.Location.X + aircraft2.Airplane.Size.Width/2;
-                            int y2 = aircraft2.Airplane.Location.Y + aircraft2.Airplane.Size.Height/2;
-                            if (collideBox2.IntersectsWith(collideBox1) && Math.Abs(aircraft.altitude - aircraft2.altitude) < 1)
+                            (double X2, double Y2) = aircraft2.vectorScale(aircraft2.heading);
+                            int x2 = aircraft2.Airplane.Location.X + (int)(aircraft2.speed / 10 * Y2);// + aircraft2.Airplane.Size.Width/2;
+                            int y2 = aircraft2.Airplane.Location.Y - (int)(aircraft2.speed / 10 * X2);// + aircraft2.Airplane.Size.Height/2;
+                            if (collideBox2.IntersectsWith(collideBox1) && Math.Abs(aircraft.altitude - aircraft2.altitude) <= 1)
                             {
                                 PictureBox collision = new PictureBox();
                                 collision.BackColor = this.pictureBox1.BackColor;
@@ -90,7 +93,7 @@ namespace CS363_TeamP
                             int dy = y2 - y1;
                             double dist = Math.Sqrt(dx * dx + dy * dy);
                             //MessageBox.Show(string.Format("D: {0}", dist));
-                            if (dist <= 50 && Math.Abs(aircraft.altitude - aircraft2.altitude) <= 10)
+                            if (dist <= 75 && Math.Abs(aircraft.altitude - aircraft2.altitude) <= 10)
                             {
                                 collisionImminent = true;
                                 //MessageBox.Show("Collision Imminent");

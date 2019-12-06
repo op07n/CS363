@@ -14,11 +14,11 @@ namespace CS363_TeamP
 {
     public class Plane
     {
-        private int speed;
+        public int speed;
         public string ID;
         public char control = ' ';
         public int altitude;
-        private int heading;
+        public int heading;
         public string destAP;
         private int expectedSpeed;
         private int expectedAltitude;
@@ -226,7 +226,7 @@ namespace CS363_TeamP
         //
         //Scale movement in X and Y coordinates depending on heading angle
         //
-        private (double scaleX, double scaleY) vectorScale(int heading)
+        public (double scaleX, double scaleY) vectorScale(int heading)
         {
             double scaleY = Math.Sin(heading * (Math.PI / 180));
             double scaleX = Math.Cos(heading * (Math.PI / 180));
@@ -266,11 +266,11 @@ namespace CS363_TeamP
             double landingAngle = (Math.Atan2(Airplane.Location.Y - 360 + 12, Airplane.Location.X - 850 + 12) * (180 / Math.PI));
             if (heading == 220 && ((landingAngle > -58 && landingAngle < -50 && altitude <= 50 && altitude >= 10) || landing == true))
             {
-                double tx = 850 - Airplane.Location.X -12;
-                double ty = 360 - Airplane.Location.Y -12;
+                double tx = 855 - Airplane.Location.X - Airplane.Size.Width/2;
+                double ty = 360 - Airplane.Location.Y - Airplane.Size.Height/2;
                 double l = Math.Sqrt(tx * tx + ty * ty);
                 Airplane.Location = new Point(Airplane.Location.X + (int)(speed / 10 * (tx / l)), Airplane.Location.Y + (int)(speed / 10 * (ty / l)));  
-                planeinfo.Location = new Point(planeinfo.Location.X + (int)(speed / 10 * (tx / l)), planeinfo.Location.Y + (int)(speed / 10 * (ty / l)));  //Use this to gauge speed difference - Uncomment when ready fro use
+                planeinfo.Location = new Point(planeinfo.Location.X + (int)(speed / 10 * (tx / l)), planeinfo.Location.Y + (int)(speed / 10 * (ty / l)));
                 landing = true;
             }
             else if (turnCW && heading != expectedHeading)
