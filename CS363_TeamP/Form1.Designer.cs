@@ -29,14 +29,21 @@
         public void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.txtCollisionImminent = new System.Windows.Forms.TextBox();
+            this.dgvTakeoffQueue = new System.Windows.Forms.DataGridView();
+            this.flightID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Dest = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.runwayID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.waitTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnTakeoff = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTakeoffQueue)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -45,86 +52,184 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // tableLayoutPanel1
+            // pictureBox1
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 1, 1);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(393, 449);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(362, 157);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Image = global::CS363_TeamP.Properties.Resources.pngkit_dirt_explosion_png_1787968;
+            this.pictureBox1.Location = new System.Drawing.Point(631, 239);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(25, 25);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Visible = false;
             // 
-            // tableLayoutPanel2
+            // txtCollisionImminent
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.radioButton2, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.radioButton1, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(184, 81);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(170, 73);
-            this.tableLayoutPanel2.TabIndex = 1;
+            this.txtCollisionImminent.BackColor = System.Drawing.Color.Black;
+            this.txtCollisionImminent.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCollisionImminent.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtCollisionImminent.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCollisionImminent.ForeColor = System.Drawing.Color.Red;
+            this.txtCollisionImminent.Location = new System.Drawing.Point(8, 20);
+            this.txtCollisionImminent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCollisionImminent.Name = "txtCollisionImminent";
+            this.txtCollisionImminent.Size = new System.Drawing.Size(316, 28);
+            this.txtCollisionImminent.TabIndex = 1;
+            this.txtCollisionImminent.Text = "** COLLISION IMMINENT**";
+            this.txtCollisionImminent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtCollisionImminent.Visible = false;
             // 
-            // radioButton1
+            // dgvTakeoffQueue
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(3, 3);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(90, 36);
-            this.radioButton1.TabIndex = 0;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "CW";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.dgvTakeoffQueue.AllowUserToAddRows = false;
+            this.dgvTakeoffQueue.AllowUserToDeleteRows = false;
+            this.dgvTakeoffQueue.AllowUserToResizeColumns = false;
+            this.dgvTakeoffQueue.AllowUserToResizeRows = false;
+            this.dgvTakeoffQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvTakeoffQueue.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvTakeoffQueue.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvTakeoffQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvTakeoffQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.flightID,
+            this.Dest,
+            this.runwayID,
+            this.waitTime,
+            this.btnTakeoff});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvTakeoffQueue.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvTakeoffQueue.EnableHeadersVisualStyles = false;
+            this.dgvTakeoffQueue.GridColor = System.Drawing.SystemColors.HotTrack;
+            this.dgvTakeoffQueue.Location = new System.Drawing.Point(12, 87);
+            this.dgvTakeoffQueue.MultiSelect = false;
+            this.dgvTakeoffQueue.Name = "dgvTakeoffQueue";
+            this.dgvTakeoffQueue.ReadOnly = true;
+            this.dgvTakeoffQueue.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dgvTakeoffQueue.RowHeadersVisible = false;
+            this.dgvTakeoffQueue.RowHeadersWidth = 62;
+            this.dgvTakeoffQueue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgvTakeoffQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvTakeoffQueue.Size = new System.Drawing.Size(312, 348);
+            this.dgvTakeoffQueue.TabIndex = 2;
+            this.dgvTakeoffQueue.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTakeoffQueue_CellClick);
             // 
-            // radioButton2
+            // flightID
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(88, 3);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(107, 36);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "CCW";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.flightID.HeaderText = "Flight ID";
+            this.flightID.MinimumWidth = 8;
+            this.flightID.Name = "flightID";
+            this.flightID.ReadOnly = true;
+            this.flightID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.flightID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Dest
+            // 
+            this.Dest.HeaderText = "Dest. AP";
+            this.Dest.MinimumWidth = 8;
+            this.Dest.Name = "Dest";
+            this.Dest.ReadOnly = true;
+            this.Dest.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Dest.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // runwayID
+            // 
+            this.runwayID.HeaderText = "Runway ID";
+            this.runwayID.MinimumWidth = 8;
+            this.runwayID.Name = "runwayID";
+            this.runwayID.ReadOnly = true;
+            // 
+            // waitTime
+            // 
+            this.waitTime.HeaderText = "Wait Time";
+            this.waitTime.MinimumWidth = 8;
+            this.waitTime.Name = "waitTime";
+            this.waitTime.ReadOnly = true;
+            this.waitTime.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.waitTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // btnTakeoff
+            // 
+            this.btnTakeoff.HeaderText = "Action";
+            this.btnTakeoff.MinimumWidth = 8;
+            this.btnTakeoff.Name = "btnTakeoff";
+            this.btnTakeoff.ReadOnly = true;
+            this.btnTakeoff.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.btnTakeoff.Text = "Takeoff";
+            this.btnTakeoff.UseColumnTextForButtonValue = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.Black;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.textBox1.Location = new System.Drawing.Point(12, 64);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(312, 19);
+            this.textBox1.TabIndex = 3;
+            this.textBox1.Text = "Takeoff Queue";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(334, 739);
+            this.panel1.TabIndex = 4;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImage = global::CS363_TeamP.Properties.Resources.BackgroundWithMenuSpace;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1304, 894);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(1424, 741);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.dgvTakeoffQueue);
+            this.Controls.Add(this.txtCollisionImminent);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
-            this.MaximumSize = new System.Drawing.Size(1326, 950);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form1";
-            this.Text = "f";
+            this.Text = "NextGen ATC Simulator";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Click += new System.EventHandler(this.Form1_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTakeoffQueue)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        public System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox txtCollisionImminent;
+        private System.Windows.Forms.DataGridView dgvTakeoffQueue;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn flightID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Dest;
+        private System.Windows.Forms.DataGridViewTextBoxColumn runwayID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn waitTime;
+        private System.Windows.Forms.DataGridViewButtonColumn btnTakeoff;
     }
 }
 

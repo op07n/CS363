@@ -63,10 +63,79 @@ namespace CS363_TeamP.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap plane {
+        internal static System.Drawing.Bitmap BackgroundWithMenuSpace {
             get {
-                object obj = ResourceManager.GetObject("plane", resourceCulture);
+                object obj = ResourceManager.GetObject("BackgroundWithMenuSpace", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cloud1 {
+            get {
+                object obj = ResourceManager.GetObject("Cloud1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cloud2 {
+            get {
+                object obj = ResourceManager.GetObject("Cloud2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cloud3 {
+            get {
+                object obj = ResourceManager.GetObject("Cloud3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cloud4 {
+            get {
+                object obj = ResourceManager.GetObject("Cloud4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap planeIconSmall {
+            get {
+                object obj = ResourceManager.GetObject("planeIconSmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pngkit_dirt_explosion_png_1787968 {
+            get {
+                object obj = ResourceManager.GetObject("pngkit_dirt-explosion-png_1787968", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream WeaponHoming {
+            get {
+                return ResourceManager.GetStream("WeaponHoming", resourceCulture);
             }
         }
     }
