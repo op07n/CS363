@@ -24,7 +24,7 @@ namespace CS363_TeamP
         //Instantiate soundplayer for collision imminent alerts
         SoundPlayer collisionAlert;
         int pointX = 0, pointY = 0;
-        public bool airportDefenses = false;
+        public bool airportDefenses = true;
         //Declare defense variables
         int turretAngle = 0;
         int score = 0;
@@ -185,7 +185,7 @@ namespace CS363_TeamP
             {
                 Plane plane = new Plane();
                 EnemyPlanes.Add(plane);
-                if(EnemyPlanes.Count <= 10)
+                if(EnemyPlanes.Count <= 20)
                 {
                     plane.mkEnemyPlane(this);
                 }
@@ -280,13 +280,16 @@ namespace CS363_TeamP
             //Weather weather = new Weather();
             //weather.mkCloud(this, g);
             //var bmp = new Bitmap(Properties.Resources.Cloud1);
-
-            //Directly drawing weather graphics to form for demonstration purposes.  We would need weather class to be functional for production.
             Graphics g = e.Graphics;
-            g.DrawImage(Properties.Resources.Cloud4, pointX, pointY);
-            g.DrawImage(Properties.Resources.Cloud3, pointX, pointY-200);
-            g.DrawImage(Properties.Resources.Cloud1, pointX+600, pointY + 100);
-            g.DrawImage(Properties.Resources.Cloud3, pointX + 600, pointY + 500);
+            //Directly drawing weather graphics to form for demonstration purposes.  We would need weather class to be functional for production.
+            if (airportDefenses == false)
+            {
+                
+                g.DrawImage(Properties.Resources.Cloud4, pointX, pointY);
+                g.DrawImage(Properties.Resources.Cloud3, pointX, pointY - 200);
+                g.DrawImage(Properties.Resources.Cloud1, pointX + 600, pointY + 100);
+                g.DrawImage(Properties.Resources.Cloud3, pointX + 600, pointY + 500);
+            }
 
             //***************************************************************************************************************
             //These paint events are used for troubleshooting/dev purposes and need to be removed/commented for the final product!!!!!
@@ -306,12 +309,15 @@ namespace CS363_TeamP
             g.DrawLine(p, point1, pointC);
             g.DrawLine(p, point1, point3);
             */
-            Pen p = new Pen(Color.LawnGreen, 2);
-            int centerX = 850;
-            int centerY = 360;
-            Point point1 = new Point(centerX, centerY);
-            Point pointC = new Point(centerX + (int)(Math.Cos(turretAngle * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(turretAngle * (Math.PI / 180)) * 400));
-            g.DrawLine(p, point1, pointC);
+            if (airportDefenses == true)
+            {
+                Pen p = new Pen(Color.LawnGreen, 2);
+                int centerX = 850;
+                int centerY = 360;
+                Point point1 = new Point(centerX, centerY);
+                Point pointC = new Point(centerX + (int)(Math.Cos(turretAngle * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(turretAngle * (Math.PI / 180)) * 400));
+                g.DrawLine(p, point1, pointC);
+            }
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
