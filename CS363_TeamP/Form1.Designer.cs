@@ -35,13 +35,13 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txtCollisionImminent = new System.Windows.Forms.TextBox();
             this.dgvTakeoffQueue = new System.Windows.Forms.DataGridView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.flightID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Dest = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.runwayID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.waitTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnTakeoff = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTakeoffQueue)).BeginInit();
             this.SuspendLayout();
@@ -56,9 +56,10 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = global::CS363_TeamP.Properties.Resources.pngkit_dirt_explosion_png_1787968;
-            this.pictureBox1.Location = new System.Drawing.Point(631, 239);
+            this.pictureBox1.Location = new System.Drawing.Point(946, 368);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(25, 25);
+            this.pictureBox1.Size = new System.Drawing.Size(38, 38);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -71,12 +72,11 @@
             this.txtCollisionImminent.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtCollisionImminent.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCollisionImminent.ForeColor = System.Drawing.Color.Red;
-            this.txtCollisionImminent.Location = new System.Drawing.Point(8, 20);
-            this.txtCollisionImminent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCollisionImminent.Location = new System.Drawing.Point(12, 31);
             this.txtCollisionImminent.Name = "txtCollisionImminent";
-            this.txtCollisionImminent.Size = new System.Drawing.Size(316, 28);
+            this.txtCollisionImminent.Size = new System.Drawing.Size(474, 41);
             this.txtCollisionImminent.TabIndex = 1;
-            this.txtCollisionImminent.Text = "** COLLISION IMMINENT**";
+            this.txtCollisionImminent.Text = "**COLLISION IMMINENT**";
             this.txtCollisionImminent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtCollisionImminent.Visible = false;
             // 
@@ -89,11 +89,11 @@
             this.dgvTakeoffQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvTakeoffQueue.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.MenuText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.MenuText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvTakeoffQueue.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvTakeoffQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -104,16 +104,17 @@
             this.waitTime,
             this.btnTakeoff});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvTakeoffQueue.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvTakeoffQueue.EnableHeadersVisualStyles = false;
-            this.dgvTakeoffQueue.GridColor = System.Drawing.SystemColors.HotTrack;
-            this.dgvTakeoffQueue.Location = new System.Drawing.Point(12, 87);
+            this.dgvTakeoffQueue.GridColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dgvTakeoffQueue.Location = new System.Drawing.Point(18, 134);
+            this.dgvTakeoffQueue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dgvTakeoffQueue.MultiSelect = false;
             this.dgvTakeoffQueue.Name = "dgvTakeoffQueue";
             this.dgvTakeoffQueue.ReadOnly = true;
@@ -121,10 +122,32 @@
             this.dgvTakeoffQueue.RowHeadersVisible = false;
             this.dgvTakeoffQueue.RowHeadersWidth = 62;
             this.dgvTakeoffQueue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvTakeoffQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvTakeoffQueue.Size = new System.Drawing.Size(312, 348);
+            this.dgvTakeoffQueue.Size = new System.Drawing.Size(468, 535);
             this.dgvTakeoffQueue.TabIndex = 2;
             this.dgvTakeoffQueue.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTakeoffQueue_CellClick);
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.Black;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.textBox1.Location = new System.Drawing.Point(18, 98);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(468, 28);
+            this.textBox1.TabIndex = 3;
+            this.textBox1.Text = "Takeoff Queue";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(501, 1137);
+            this.panel1.TabIndex = 4;
             // 
             // flightID
             // 
@@ -170,42 +193,20 @@
             this.btnTakeoff.Text = "Takeoff";
             this.btnTakeoff.UseColumnTextForButtonValue = true;
             // 
-            // textBox1
-            // 
-            this.textBox1.BackColor = System.Drawing.Color.Black;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.textBox1.Location = new System.Drawing.Point(12, 64);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(312, 19);
-            this.textBox1.TabIndex = 3;
-            this.textBox1.Text = "Takeoff Queue";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Black;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(334, 739);
-            this.panel1.TabIndex = 4;
-            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackgroundImage = global::CS363_TeamP.Properties.Resources.BackgroundWithMenuSpace;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1424, 741);
+            this.ClientSize = new System.Drawing.Size(2136, 1140);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dgvTakeoffQueue);
             this.Controls.Add(this.txtCollisionImminent);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form1";
             this.Text = "NextGen ATC Simulator";
             this.Load += new System.EventHandler(this.Form1_Load);

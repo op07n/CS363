@@ -29,12 +29,15 @@ namespace CS363_TeamP
         TextBox txtIDTitle;
         TextBox txtID;
         TextBox txtSpdTitle;
+        TextBox txtCurSpd;
         TextBox txtSpd;
         public TableLayoutPanel tblPlaneInfo;
         TableLayoutPanel tblTurnDirection;
         TextBox txtAlt;
+        TextBox txtCurAlt;
         TextBox txtAltTitle;
         TextBox txtHead;
+        TextBox txtCurHead;
         TextBox txtHeadTitle;
         Button btnSendCmd;
         RadioButton rbCW;
