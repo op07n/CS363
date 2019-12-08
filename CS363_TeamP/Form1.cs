@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
 using System.Media;
+using System.Windows.Input;
 
 namespace CS363_TeamP
 {
@@ -17,9 +18,16 @@ namespace CS363_TeamP
         //Instantiate lists to store all Plane classes generated
         public List<Plane> InFlightList;
         public List<Plane> TakeoffList;
+        public List<Plane> EnemyPlanes;
+        public List<Bullet> Bullets;
+        
         //Instantiate soundplayer for collision imminent alerts
         SoundPlayer collisionAlert;
         int pointX = 0, pointY = 0;
+        public bool airportDefenses = false;
+        //Declare defense variables
+        int turretAngle = 0;
+        int score = 0;
         
 
         public Form1()
@@ -28,6 +36,8 @@ namespace CS363_TeamP
             //Define InFlightList and TakeoffQueue as lists of planes
             InFlightList = new List<Plane>();
             TakeoffList = new List<Plane>();
+            EnemyPlanes = new List<Plane>();
+            Bullets = new List<Bullet>();
             //Define collisionAlert sound player
             collisionAlert = new SoundPlayer(CS363_TeamP.Properties.Resources.WeaponHoming);
             
@@ -170,12 +180,33 @@ namespace CS363_TeamP
         //
         public void timer1_Tick(object sender, EventArgs e)
         {
+            //Make enemy planes
+            if(airportDefenses == true)
+            {
+                Plane plane = new Plane();
+                EnemyPlanes.Add(plane);
+                if(EnemyPlanes.Count <= 10)
+                {
+                    plane.mkEnemyPlane(this);
+                }
+                
+            }
+
             //Check if any planes are violating eachother's safe space
-            collisionAvoidance();
             //Update cloud location
-            pointX += 5;
-            pointY += 5;
-            Invalidate();
+            if(airportDefenses == false)
+            {
+                collisionAvoidance();
+                pointX += 5;
+                pointY += 5;
+                Invalidate();
+            }
+            else
+            {
+                pointX = 1000;
+                pointY = 1000;
+            }
+            
             //Increment wait time for any planes awaiting takeoff
             foreach (DataGridViewRow row in dgvTakeoffQueue.Rows)
             {
@@ -198,6 +229,46 @@ namespace CS363_TeamP
                     secs = sec.ToString();
                 }
                 row.Cells[3].Value = min.ToString() + ':' + secs;
+            }
+        }
+        //
+        // Timer2_Tick
+        //
+        private void Timer2_Tick(object sender, EventArgs e)
+        {
+            if(airportDefenses == true)
+            {
+                bool shotdown = false;
+                foreach (Plane x in EnemyPlanes)
+                {
+                    foreach(Bullet y in Bullets)
+                    {
+                        if (x.Airplane.Bounds.IntersectsWith(y.bullet.Bounds))
+                        {
+                            score++;
+                            x.Airplane.Dispose();
+                            x.Airplane = null;
+                            x.planeinfo.Dispose();
+                            x.planeinfo = null;
+                            EnemyPlanes.Remove(x);
+                            x.tm.Stop();
+                            x.tm.Dispose();
+                            x.tm = null;
+                            y.bullet.Dispose();
+                            y.bullet = null;
+                            y.tm.Dispose();
+                            y.tm = null;
+                            Bullets.Remove(y);
+                            shotdown = true;
+                            break;
+                        }
+                    }
+                    if (shotdown)
+                    {
+                        break;
+                    }
+                }
+                Invalidate();
             }
         }
         //
@@ -235,7 +306,41 @@ namespace CS363_TeamP
             g.DrawLine(p, point1, pointC);
             g.DrawLine(p, point1, point3);
             */
+            Pen p = new Pen(Color.LawnGreen, 2);
+            int centerX = 850;
+            int centerY = 360;
+            Point point1 = new Point(centerX, centerY);
+            Point pointC = new Point(centerX + (int)(Math.Cos(turretAngle * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(turretAngle * (Math.PI / 180)) * 400));
+            g.DrawLine(p, point1, pointC);
         }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if(airportDefenses == true)
+            {
+                if (keyData == Keys.Left)
+                {
+                    turretAngle = (turretAngle - 1) % 360;
+                    return true;
+                }
+                else if (keyData == Keys.Right)
+                {
+                    turretAngle = (turretAngle + 1) % 360;
+                    return true;
+                }
+                else if (keyData == Keys.Space)
+                {
+                    Bullet bullet = new Bullet();
+                    bullet.direction = turretAngle;
+                    bullet.mkBullet(this);
+                    Bullets.Add(bullet);
+                    return true;
+                }
+            }
+            
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        
 
         public void dgvTakeoffQueue_CellClick(Object sender, DataGridViewCellEventArgs e)
         {
