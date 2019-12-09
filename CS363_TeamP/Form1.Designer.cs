@@ -42,9 +42,12 @@
             this.btnTakeoff = new System.Windows.Forms.DataGridViewButtonColumn();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnDefenses = new System.Windows.Forms.Button();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.txtScore = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTakeoffQueue)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
@@ -186,16 +189,38 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Controls.Add(this.txtScore);
+            this.panel1.Controls.Add(this.btnDefenses);
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(334, 739);
             this.panel1.TabIndex = 4;
+            // 
+            // btnDefenses
+            // 
+            this.btnDefenses.Location = new System.Drawing.Point(12, 441);
+            this.btnDefenses.Name = "btnDefenses";
+            this.btnDefenses.Size = new System.Drawing.Size(98, 40);
+            this.btnDefenses.TabIndex = 5;
+            this.btnDefenses.Text = "Airport Defenses";
+            this.btnDefenses.UseVisualStyleBackColor = true;
+            this.btnDefenses.Click += new System.EventHandler(this.BtnDefenses_Click);
             // 
             // timer2
             // 
             this.timer2.Enabled = true;
             this.timer2.Interval = 16;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
+            // 
+            // txtScore
+            // 
+            this.txtScore.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtScore.Location = new System.Drawing.Point(130, 450);
+            this.txtScore.Name = "txtScore";
+            this.txtScore.Size = new System.Drawing.Size(97, 20);
+            this.txtScore.TabIndex = 6;
+            this.txtScore.Text = "Score: 0";
+            this.txtScore.Visible = false;
             // 
             // Form1
             // 
@@ -219,6 +244,8 @@
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTakeoffQueue)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -237,6 +264,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn waitTime;
         private System.Windows.Forms.DataGridViewButtonColumn btnTakeoff;
         public System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.Button btnDefenses;
+        private System.Windows.Forms.TextBox txtScore;
     }
 }
 

@@ -24,7 +24,7 @@ namespace CS363_TeamP
         //Instantiate soundplayer for collision imminent alerts
         SoundPlayer collisionAlert;
         int pointX = 0, pointY = 0;
-        public bool airportDefenses = true;
+        public bool airportDefenses = false;
         //Declare defense variables
         int turretAngle = 0;
         int score = 0;
@@ -246,6 +246,7 @@ namespace CS363_TeamP
                         if (x.Airplane.Bounds.IntersectsWith(y.bullet.Bounds))
                         {
                             score++;
+                            txtScore.Text = string.Format("Score: {0}", score);
                             x.Airplane.Dispose();
                             x.Airplane = null;
                             x.planeinfo.Dispose();
@@ -346,7 +347,11 @@ namespace CS363_TeamP
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        
+        private void BtnDefenses_Click(object sender, EventArgs e)
+        {
+            airportDefenses = true;
+            txtScore.Visible = true;
+        }
 
         public void dgvTakeoffQueue_CellClick(Object sender, DataGridViewCellEventArgs e)
         {
