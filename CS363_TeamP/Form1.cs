@@ -360,7 +360,7 @@ namespace CS363_TeamP
             {
                 int selectedRow = e.RowIndex;
                 DataGridViewRow Row = dgvTakeoffQueue.Rows[selectedRow];
-                foreach (var airplane in TakeoffList)
+                foreach (Plane airplane in TakeoffList)
                 {
                     if (airplane.ID == Row.Cells[0].Value.ToString())
                     {
