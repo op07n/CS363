@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bullet.cs" />
     <Compile Include="Weather.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Form1.cs">

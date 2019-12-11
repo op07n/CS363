@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
 using System.Media;
+using System.Windows.Input;
 
 namespace CS363_TeamP
 {
@@ -17,9 +18,16 @@ namespace CS363_TeamP
         //Instantiate lists to store all Plane classes generated
         public List<Plane> InFlightList;
         public List<Plane> TakeoffList;
+        public List<Plane> EnemyPlanes;
+        public List<Bullet> Bullets;
+        
         //Instantiate soundplayer for collision imminent alerts
         SoundPlayer collisionAlert;
         int pointX = 0, pointY = 0;
+        public bool airportDefenses = false;
+        //Declare defense variables
+        int turretAngle = 0;
+        int score = 0;
         
 
         public Form1()
@@ -28,6 +36,8 @@ namespace CS363_TeamP
             //Define InFlightList and TakeoffQueue as lists of planes
             InFlightList = new List<Plane>();
             TakeoffList = new List<Plane>();
+            EnemyPlanes = new List<Plane>();
+            Bullets = new List<Bullet>();
             //Define collisionAlert sound player
             collisionAlert = new SoundPlayer(CS363_TeamP.Properties.Resources.WeaponHoming);
             
@@ -45,6 +55,7 @@ namespace CS363_TeamP
         //
         public void collisionAvoidance()
         {
+            
             if (InFlightList.Count > 1)
             {
                 bool collide = false;
@@ -52,8 +63,9 @@ namespace CS363_TeamP
                 foreach (var aircraft in InFlightList)
                 {
                     Rectangle collideBox1 = new Rectangle(aircraft.Airplane.Left, aircraft.Airplane.Top, aircraft.Airplane.Width, aircraft.Airplane.Height);
-                    int x1 = aircraft.Airplane.Location.X + aircraft.Airplane.Size.Width / 2;
-                    int y1 = aircraft.Airplane.Location.Y + aircraft.Airplane.Size.Height / 2;
+                    (double X1, double Y1) = aircraft.vectorScale(aircraft.heading);
+                    int x1 = aircraft.Airplane.Location.X + (int)(aircraft.speed / 10 * Y1);// + aircraft.Airplane.Size.Width / 2;
+                    int y1 = aircraft.Airplane.Location.Y - (int)(aircraft.speed / 10 * X1);// + aircraft.Airplane.Size.Height / 2;
                     foreach (var aircraft2 in InFlightList)
                     {
                         if (aircraft == aircraft2)
@@ -63,9 +75,10 @@ namespace CS363_TeamP
                         else
                         {
                             Rectangle collideBox2 = new Rectangle(aircraft2.Airplane.Left, aircraft2.Airplane.Top, aircraft2.Airplane.Width, aircraft2.Airplane.Height);
-                            int x2 = aircraft2.Airplane.Location.X + aircraft2.Airplane.Size.Width/2;
-                            int y2 = aircraft2.Airplane.Location.Y + aircraft2.Airplane.Size.Height/2;
-                            if (collideBox2.IntersectsWith(collideBox1) && Math.Abs(aircraft.altitude - aircraft2.altitude) < 1)
+                            (double X2, double Y2) = aircraft2.vectorScale(aircraft2.heading);
+                            int x2 = aircraft2.Airplane.Location.X + (int)(aircraft2.speed / 10 * Y2);// + aircraft2.Airplane.Size.Width/2;
+                            int y2 = aircraft2.Airplane.Location.Y - (int)(aircraft2.speed / 10 * X2);// + aircraft2.Airplane.Size.Height/2;
+                            if (collideBox2.IntersectsWith(collideBox1) && Math.Abs(aircraft.altitude - aircraft2.altitude) <= 1)
                             {
                                 PictureBox collision = new PictureBox();
                                 collision.BackColor = this.pictureBox1.BackColor;
@@ -90,7 +103,7 @@ namespace CS363_TeamP
                             int dy = y2 - y1;
                             double dist = Math.Sqrt(dx * dx + dy * dy);
                             //MessageBox.Show(string.Format("D: {0}", dist));
-                            if (dist <= 50 && Math.Abs(aircraft.altitude - aircraft2.altitude) <= 10)
+                            if (dist <= 75 && Math.Abs(aircraft.altitude - aircraft2.altitude) <= 10)
                             {
                                 collisionImminent = true;
                                 //MessageBox.Show("Collision Imminent");
@@ -167,12 +180,33 @@ namespace CS363_TeamP
         //
         public void timer1_Tick(object sender, EventArgs e)
         {
+            //Make enemy planes
+            if(airportDefenses == true)
+            {
+                Plane plane = new Plane();
+                EnemyPlanes.Add(plane);
+                if(EnemyPlanes.Count <= 20)
+                {
+                    plane.mkEnemyPlane(this);
+                }
+                
+            }
+
             //Check if any planes are violating eachother's safe space
-            collisionAvoidance();
             //Update cloud location
-            pointX += 5;
-            pointY += 5;
-            Invalidate();
+            if(airportDefenses == false)
+            {
+                collisionAvoidance();
+                pointX += 5;
+                pointY += 5;
+                Invalidate();
+            }
+            else
+            {
+                pointX = 1000;
+                pointY = 1000;
+            }
+            
             //Increment wait time for any planes awaiting takeoff
             foreach (DataGridViewRow row in dgvTakeoffQueue.Rows)
             {
@@ -198,6 +232,47 @@ namespace CS363_TeamP
             }
         }
         //
+        // Timer2_Tick
+        //
+        private void Timer2_Tick(object sender, EventArgs e)
+        {
+            if(airportDefenses == true)
+            {
+                bool shotdown = false;
+                foreach (Plane x in EnemyPlanes)
+                {
+                    foreach(Bullet y in Bullets)
+                    {
+                        if (x.Airplane.Bounds.IntersectsWith(y.bullet.Bounds))
+                        {
+                            score++;
+                            txtScore.Text = string.Format("Score: {0}", score);
+                            x.Airplane.Dispose();
+                            x.Airplane = null;
+                            x.planeinfo.Dispose();
+                            x.planeinfo = null;
+                            EnemyPlanes.Remove(x);
+                            x.tm.Stop();
+                            x.tm.Dispose();
+                            x.tm = null;
+                            y.bullet.Dispose();
+                            y.bullet = null;
+                            y.tm.Dispose();
+                            y.tm = null;
+                            Bullets.Remove(y);
+                            shotdown = true;
+                            break;
+                        }
+                    }
+                    if (shotdown)
+                    {
+                        break;
+                    }
+                }
+                Invalidate();
+            }
+        }
+        //
         //Form1_Paint - Used to draw weather graphics and make troubleshooting graphics
         //
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -206,13 +281,16 @@ namespace CS363_TeamP
             //Weather weather = new Weather();
             //weather.mkCloud(this, g);
             //var bmp = new Bitmap(Properties.Resources.Cloud1);
-
-            //Directly drawing weather graphics to form for demonstration purposes.  We would need weather class to be functional for production.
             Graphics g = e.Graphics;
-            g.DrawImage(Properties.Resources.Cloud4, pointX, pointY);
-            g.DrawImage(Properties.Resources.Cloud3, pointX, pointY-200);
-            g.DrawImage(Properties.Resources.Cloud1, pointX+600, pointY + 100);
-            g.DrawImage(Properties.Resources.Cloud3, pointX + 600, pointY + 500);
+            //Directly drawing weather graphics to form for demonstration purposes.  We would need weather class to be functional for production.
+            if (airportDefenses == false)
+            {
+                
+                g.DrawImage(Properties.Resources.Cloud4, pointX, pointY);
+                g.DrawImage(Properties.Resources.Cloud3, pointX, pointY - 200);
+                g.DrawImage(Properties.Resources.Cloud1, pointX + 600, pointY + 100);
+                g.DrawImage(Properties.Resources.Cloud3, pointX + 600, pointY + 500);
+            }
 
             //***************************************************************************************************************
             //These paint events are used for troubleshooting/dev purposes and need to be removed/commented for the final product!!!!!
@@ -232,6 +310,47 @@ namespace CS363_TeamP
             g.DrawLine(p, point1, pointC);
             g.DrawLine(p, point1, point3);
             */
+            if (airportDefenses == true)
+            {
+                Pen p = new Pen(Color.LawnGreen, 2);
+                int centerX = 850;
+                int centerY = 360;
+                Point point1 = new Point(centerX, centerY);
+                Point pointC = new Point(centerX + (int)(Math.Cos(turretAngle * (Math.PI / 180)) * 400), centerY + (int)(Math.Sin(turretAngle * (Math.PI / 180)) * 400));
+                g.DrawLine(p, point1, pointC);
+            }
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if(airportDefenses == true)
+            {
+                if (keyData == Keys.Left)
+                {
+                    turretAngle = (turretAngle - 1) % 360;
+                    return true;
+                }
+                else if (keyData == Keys.Right)
+                {
+                    turretAngle = (turretAngle + 1) % 360;
+                    return true;
+                }
+                else if (keyData == Keys.Space)
+                {
+                    Bullet bullet = new Bullet();
+                    bullet.direction = turretAngle;
+                    bullet.mkBullet(this);
+                    Bullets.Add(bullet);
+                    return true;
+                }
+            }
+            
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void BtnDefenses_Click(object sender, EventArgs e)
+        {
+            airportDefenses = true;
+            txtScore.Visible = true;
         }
 
         public void dgvTakeoffQueue_CellClick(Object sender, DataGridViewCellEventArgs e)
@@ -241,7 +360,7 @@ namespace CS363_TeamP
             {
                 int selectedRow = e.RowIndex;
                 DataGridViewRow Row = dgvTakeoffQueue.Rows[selectedRow];
-                foreach (var airplane in TakeoffList)
+                foreach (Plane airplane in TakeoffList)
                 {
                     if (airplane.ID == Row.Cells[0].Value.ToString())
                     {
