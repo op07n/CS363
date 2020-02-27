@@ -1,21 +1,19 @@
-name: .NET Core
+name: .NET
 
 on: [push]
 
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.100
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
-    - uses: actions/upload-artifact@v1
-      with:
-        name: artifact
-        path: ./bin
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: Build DotNET35
+        run: |
+           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+           .\MSBuild.exe $Env:GITHUB_WORKSPACE\CS363
+           
+      - uses: actions/upload-artifact@v1
+        with:
+          name: artifact
+          path: ./bin
